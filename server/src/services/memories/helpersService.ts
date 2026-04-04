@@ -1,3 +1,6 @@
+import { Readable } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
+import { Response } from 'express';
 import { canAccessTrip, db } from "../../db/database";
 
 // helpers for handling return types
@@ -24,11 +27,44 @@ export function mapDbError(error: unknown, fallbackMessage: string): ServiceErro
 }
 
 
+export function handleServiceResult<T>(res: Response, result: ServiceResult<T>): void {
+    if ('error' in result) {
+        res.status(result.error.status).json({ error: result.error.message });
+    }
+    else {
+        console.log('Service result data:', result.data);
+        res.json(result.data);
+    }
+}
+
 // ----------------------------------------------
 // types used across memories services
 export type Selection = {
     provider: string;
     asset_ids: string[];
+};
+
+export type StatusResult = {
+    connected: true;
+    user: { name: string }
+} | {
+    connected: false;
+    error: string
+};
+
+export type AlbumsList = {
+    albums: Array<{ id: string; albumName: string; assetCount: number }>
+};
+
+export type AssetInfo = {
+    id: string;
+    takenAt: string;
+};
+
+export type AssetsList = {
+    assets: AssetInfo[],
+    total: number,
+    hasMore: boolean
 };
 
 
@@ -95,4 +131,22 @@ export function getAlbumIdFromLink(tripId: string, linkId: string, userId: numbe
 
 export function updateSyncTimeForAlbumLink(linkId: string): void {
     db.prepare('UPDATE trip_album_links SET last_synced_at = CURRENT_TIMESTAMP WHERE id = ?').run(linkId);
+}
+
+export async function pipeAsset(url: string, response: Response): Promise<void> {
+    const resp = await fetch(url);
+
+    response.status(resp.status);
+    if (resp.headers.get('content-type')) response.set('Content-Type', resp.headers.get('content-type') as string);
+    if (resp.headers.get('cache-control')) response.set('Cache-Control', resp.headers.get('cache-control') as string);
+    if (resp.headers.get('content-length')) response.set('Content-Length', resp.headers.get('content-length') as string);
+    if (resp.headers.get('content-disposition')) response.set('Content-Disposition', resp.headers.get('content-disposition') as string);
+
+    if (!resp.body) {
+        response.end();
+    }
+    else {
+        pipeline(Readable.fromWeb(resp.body), response);
+    }
+
 }
