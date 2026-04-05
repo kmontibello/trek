@@ -341,14 +341,13 @@ const DayPlanSidebar = React.memo(function DayPlanSidebar({
       initTransportPositions(dayId)
     }
 
-    // Build base list: ALL places (timed and untimed) + notes sorted by order_index/sort_order
-    // Places keep their order_index ordering — only transports are inserted based on time.
+    // All places keep their order_index — untimed can be freely moved, timed auto-sort when time is set
     const baseItems = [
       ...da.map(a => ({ type: 'place' as const, sortKey: a.order_index, data: a })),
       ...dn.map(n => ({ type: 'note' as const, sortKey: n.sort_order, data: n })),
     ].sort((a, b) => a.sortKey - b.sortKey)
 
-    // Only transports are inserted among base items based on time/position
+    // Transports are inserted among places based on time
     const timedTransports = transport.map(r => ({
       type: 'transport' as const,
       data: r,
@@ -360,22 +359,20 @@ const DayPlanSidebar = React.memo(function DayPlanSidebar({
       return timedTransports.map((item, i) => ({ ...item, sortKey: i }))
     }
 
-    // Insert transports among base items using persisted position or time-to-position mapping.
+    // Insert transports among places based on per-day position or time
     const result = [...baseItems]
     for (let ti = 0; ti < timedTransports.length; ti++) {
       const timed = timedTransports[ti]
       const minutes = timed.minutes
 
-      // Use per-day position if available, fallback to global position
-      const dayObj = days.find(d => d.id === dayId)
+      // Use per-day position if explicitly set by user reorder
       const perDayPos = timed.data.day_positions?.[dayId] ?? timed.data.day_positions?.[String(dayId)]
-      const effectivePos = perDayPos ?? timed.data.day_plan_position
-      if (effectivePos != null) {
-        result.push({ type: timed.type, sortKey: effectivePos, data: timed.data })
+      if (perDayPos != null) {
+        result.push({ type: timed.type, sortKey: perDayPos, data: timed.data })
         continue
       }
 
-      // Find insertion position: after the last base item with time <= this transport's time
+      // Find insertion position: after the last place with time <= this transport's time
       let insertAfterKey = -Infinity
       for (const item of result) {
         if (item.type === 'place') {
