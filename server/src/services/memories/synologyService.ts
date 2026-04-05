@@ -120,9 +120,9 @@ function _getSynologyCredentials(userId: number): ServiceResult<SynologyCredenti
 }
 
 
-function _buildSynologyEndpoint(url: string): string {
+function _buildSynologyEndpoint(url: string, params: string): string {
     const normalized = url.replace(/\/$/, '').match(/^https?:\/\//) ? url.replace(/\/$/, '') : `https://${url.replace(/\/$/, '')}`;
-    return `${normalized}${SYNOLOGY_ENDPOINT_PATH}`;
+    return `${normalized}${SYNOLOGY_ENDPOINT_PATH}?${params}`;
 }
 
 function _buildSynologyFormBody(params: ApiCallParams): URLSearchParams {
@@ -135,7 +135,7 @@ function _buildSynologyFormBody(params: ApiCallParams): URLSearchParams {
 }
 
 async function _fetchSynologyJson<T>(url: string, body: URLSearchParams): Promise<ServiceResult<T>> {
-    const endpoint = _buildSynologyEndpoint(url);
+    const endpoint = _buildSynologyEndpoint(url, `api=${body.get('api')}`);
     const SsrfResult = await checkSsrf(endpoint);
     if (!SsrfResult.allowed) {
         return fail(SsrfResult.error, 400);
@@ -497,8 +497,7 @@ export async function streamSynologyAsset(
             _sid: sid.data,
         });
 
-    const url = `${_buildSynologyEndpoint(synology_credentials.data.synology_url)}?${params.toString()}`;
-
+    const url = _buildSynologyEndpoint(synology_credentials.data.synology_url, params.toString());
     await pipeAsset(url, response)
 }
 
