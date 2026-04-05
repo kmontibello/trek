@@ -16,6 +16,8 @@ import {
   updateBag,
   deleteBag,
   applyTemplate,
+  saveAsTemplate,
+  setBagMembers,
   getCategoryAssignees,
   updateCategoryAssignees,
   reorderItems,
@@ -92,7 +94,7 @@ router.put('/reorder', authenticate, (req: Request, res: Response) => {
 router.put('/:id', authenticate, (req: Request, res: Response) => {
   const authReq = req as AuthRequest;
   const { tripId, id } = req.params;
-  const { name, checked, category, weight_grams, bag_id } = req.body;
+  const { name, checked, category, weight_grams, bag_id, quantity } = req.body;
 
   const trip = verifyTripAccess(tripId, authReq.user.id);
   if (!trip) return res.status(404).json({ error: 'Trip not found' });
@@ -100,7 +102,7 @@ router.put('/:id', authenticate, (req: Request, res: Response) => {
   if (!checkPermission('packing_edit', authReq.user.role, trip.user_id, authReq.user.id, trip.user_id !== authReq.user.id))
     return res.status(403).json({ error: 'No permission' });
 
-  const updated = updateItem(tripId, id, { name, checked, category, weight_grams, bag_id }, Object.keys(req.body));
+  const updated = updateItem(tripId, id, { name, checked, category, weight_grams, bag_id, quantity }, Object.keys(req.body));
   if (!updated) return res.status(404).json({ error: 'Item not found' });
 
   res.json({ item: updated });
@@ -151,12 +153,12 @@ router.post('/bags', authenticate, (req: Request, res: Response) => {
 router.put('/bags/:bagId', authenticate, (req: Request, res: Response) => {
   const authReq = req as AuthRequest;
   const { tripId, bagId } = req.params;
-  const { name, color, weight_limit_grams } = req.body;
+  const { name, color, weight_limit_grams, user_id } = req.body;
   const trip = verifyTripAccess(tripId, authReq.user.id);
   if (!trip) return res.status(404).json({ error: 'Trip not found' });
   if (!checkPermission('packing_edit', authReq.user.role, trip.user_id, authReq.user.id, trip.user_id !== authReq.user.id))
     return res.status(403).json({ error: 'No permission' });
-  const updated = updateBag(tripId, bagId, { name, color, weight_limit_grams });
+  const updated = updateBag(tripId, bagId, { name, color, weight_limit_grams, user_id }, Object.keys(req.body));
   if (!updated) return res.status(404).json({ error: 'Bag not found' });
   res.json({ bag: updated });
   broadcast(tripId, 'packing:bag-updated', { bag: updated }, req.headers['x-socket-id'] as string);
@@ -191,6 +193,40 @@ router.post('/apply-template/:templateId', authenticate, (req: Request, res: Res
 
   res.json({ items: added, count: added.length });
   broadcast(tripId, 'packing:template-applied', { items: added }, req.headers['x-socket-id'] as string);
+});
+
+// ── Bag Members ────────────────────────────────────────────────────────────
+
+router.put('/bags/:bagId/members', authenticate, (req: Request, res: Response) => {
+  const authReq = req as AuthRequest;
+  const { tripId, bagId } = req.params;
+  const { user_ids } = req.body;
+  const trip = verifyTripAccess(tripId, authReq.user.id);
+  if (!trip) return res.status(404).json({ error: 'Trip not found' });
+  if (!checkPermission('packing_edit', authReq.user.role, trip.user_id, authReq.user.id, trip.user_id !== authReq.user.id))
+    return res.status(403).json({ error: 'No permission' });
+  const members = setBagMembers(tripId, bagId, Array.isArray(user_ids) ? user_ids : []);
+  if (!members) return res.status(404).json({ error: 'Bag not found' });
+  res.json({ members });
+  broadcast(tripId, 'packing:bag-members-updated', { bagId: Number(bagId), members }, req.headers['x-socket-id'] as string);
+});
+
+// ── Save as Template ───────────────────────────────────────────────────────
+
+router.post('/save-as-template', authenticate, (req: Request, res: Response) => {
+  const authReq = req as AuthRequest;
+  const { tripId } = req.params;
+  const { name } = req.body;
+
+  const trip = verifyTripAccess(tripId, authReq.user.id);
+  if (!trip) return res.status(404).json({ error: 'Trip not found' });
+
+  if (!name?.trim()) return res.status(400).json({ error: 'Template name is required' });
+
+  const template = saveAsTemplate(tripId, authReq.user.id, name.trim());
+  if (!template) return res.status(400).json({ error: 'No items to save' });
+
+  res.status(201).json({ template });
 });
 
 // ── Category assignees ──────────────────────────────────────────────────────

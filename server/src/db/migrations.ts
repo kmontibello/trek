@@ -826,6 +826,23 @@ function runMigrations(db: Database.Database): void {
     () => {
       try { db.exec('ALTER TABLE budget_items ADD COLUMN reservation_id INTEGER REFERENCES reservations(id) ON DELETE SET NULL DEFAULT NULL'); } catch (err: any) { if (!err.message?.includes('duplicate column name')) throw err; }
     },
+    // Migration 74: Add quantity to packing_items + user_id to packing_bags + bag_members table
+    () => {
+      try { db.exec('ALTER TABLE packing_items ADD COLUMN quantity INTEGER NOT NULL DEFAULT 1'); } catch (err: any) { if (!err.message?.includes('duplicate column name')) throw err; }
+      try { db.exec('ALTER TABLE packing_bags ADD COLUMN user_id INTEGER REFERENCES users(id) ON DELETE SET NULL DEFAULT NULL'); } catch (err: any) { if (!err.message?.includes('duplicate column name')) throw err; }
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS packing_bag_members (
+          bag_id INTEGER NOT NULL REFERENCES packing_bags(id) ON DELETE CASCADE,
+          user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          PRIMARY KEY (bag_id, user_id)
+        );
+        CREATE INDEX IF NOT EXISTS idx_packing_bag_members_bag ON packing_bag_members(bag_id);
+      `);
+      // Migrate existing single user_id to bag_members
+      const bagsWithUser = db.prepare('SELECT id, user_id FROM packing_bags WHERE user_id IS NOT NULL').all() as { id: number; user_id: number }[];
+      const ins = db.prepare('INSERT OR IGNORE INTO packing_bag_members (bag_id, user_id) VALUES (?, ?)');
+      for (const b of bagsWithUser) ins.run(b.id, b.user_id);
+    },
   ];
 
   if (currentVersion < migrations.length) {
