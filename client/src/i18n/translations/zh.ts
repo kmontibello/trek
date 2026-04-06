@@ -809,6 +809,16 @@ const zh: Record<string, string> = {
   // Places Sidebar
   'places.addPlace': '添加地点/活动',
   'places.importGpx': 'GPX',
+  'places.importKmlKmz': 'TODO: KMZ / KML',
+
+  'places.kmlKmzImportError': 'TODO: KMZ/KML import failed',
+  'places.kmlKmzInvalidType': 'TODO: Please select a .kml or .kmz file.',
+  'places.kmlKmzTooLarge': 'TODO: File is too large. Maximum upload size is {maxMb} MB.',
+  'places.kmlKmzHint': 'TODO: KML/KMZ are common map export formats used by apps like Google My Maps and Google Earth. TREK imports Placemark name, description, and coordinates.',
+  'places.kmlKmzSizeHint': 'TODO: Maximum file size: {maxMb} MB (same limit as GPX).',
+  'places.kmlKmzSelectedFile': 'TODO: Selected file: {name}',
+  'places.kmlKmzSummaryTitle': 'TODO: Import summary',
+  'places.kmlKmzSummaryValues': 'TODO: Placemarks: {total} - Imported: {created} - Skipped: {skipped}',
   'places.gpxImported': '已从 GPX 导入 {count} 个地点',
   'places.gpxError': 'GPX 导入失败',
   'places.importGoogleList': 'Google 列表',

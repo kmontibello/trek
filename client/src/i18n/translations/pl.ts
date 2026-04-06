@@ -773,6 +773,16 @@ const pl: Record<string, string | { name: string; category: string }[]> = {
   // Places Sidebar
   'places.addPlace': 'Dodaj miejsce/atrakcję',
   'places.importGpx': 'Importuj GPX',
+  'places.importKmlKmz': 'TODO: KMZ / KML',
+
+  'places.kmlKmzImportError': 'TODO: KMZ/KML import failed',
+  'places.kmlKmzInvalidType': 'TODO: Please select a .kml or .kmz file.',
+  'places.kmlKmzTooLarge': 'TODO: File is too large. Maximum upload size is {maxMb} MB.',
+  'places.kmlKmzHint': 'TODO: KML/KMZ are common map export formats used by apps like Google My Maps and Google Earth. TREK imports Placemark name, description, and coordinates.',
+  'places.kmlKmzSizeHint': 'TODO: Maximum file size: {maxMb} MB (same limit as GPX).',
+  'places.kmlKmzSelectedFile': 'TODO: Selected file: {name}',
+  'places.kmlKmzSummaryTitle': 'TODO: Import summary',
+  'places.kmlKmzSummaryValues': 'TODO: Placemarks: {total} - Imported: {created} - Skipped: {skipped}',
   'places.gpxImported': '{count} miejsc zaimportowanych z GPX',
   'places.urlResolved': 'Miejsce zaimportowane z URL',
   'places.gpxError': 'Nie udało się zaimportować pliku GPX',
