@@ -59,13 +59,10 @@ globalThis.ResizeObserver = vi.fn().mockImplementation(() => ({
   disconnect: vi.fn(),
 })) as unknown as typeof ResizeObserver;
 
-// URL.createObjectURL / revokeObjectURL — used by file uploads
-if (typeof URL.createObjectURL === 'undefined') {
-  Object.defineProperty(URL, 'createObjectURL', { writable: true, value: vi.fn(() => 'blob:mock') });
-}
-if (typeof URL.revokeObjectURL === 'undefined') {
-  Object.defineProperty(URL, 'revokeObjectURL', { writable: true, value: vi.fn() });
-}
+// URL.createObjectURL / revokeObjectURL — jsdom defines these but returns '' for createObjectURL;
+// always override so tests get a predictable 'blob:mock' string.
+Object.defineProperty(URL, 'createObjectURL', { writable: true, configurable: true, value: vi.fn(() => 'blob:mock') });
+Object.defineProperty(URL, 'revokeObjectURL', { writable: true, configurable: true, value: vi.fn() });
 
 // Element.prototype.scrollIntoView — jsdom doesn't implement it
 Element.prototype.scrollIntoView = vi.fn();

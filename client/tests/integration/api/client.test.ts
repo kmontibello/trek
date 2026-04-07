@@ -334,10 +334,14 @@ describe('API client interceptors', () => {
   // ── backupApi.download ───────────────────────────────────────────────────────
 
   it('FE-API-013: backupApi.download creates a temp anchor and clicks it', async () => {
-    const createObjectURL = vi.fn(() => 'blob:mock-url');
-    const revokeObjectURL = vi.fn();
-    Object.defineProperty(URL, 'createObjectURL', { writable: true, value: createObjectURL });
-    Object.defineProperty(URL, 'revokeObjectURL', { writable: true, value: revokeObjectURL });
+    // backupApi.download uses native fetch (not axios), so mock it directly to
+    // avoid jsdom/MSW interception differences across environments.
+    const blob = new Blob(['zip-bytes'], { type: 'application/zip' });
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+      new Response(blob, { status: 200 })
+    );
+    const createObjectURL = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url');
+    const revokeObjectURL = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
 
     // Spy on createElement to intercept the anchor click
     const originalCreate = document.createElement.bind(document);
@@ -349,12 +353,6 @@ describe('API client interceptors', () => {
       }
       return el;
     });
-
-    server.use(
-      http.get('/api/backup/download/backup.zip', () => {
-        return new HttpResponse(new Blob(['zip-bytes'], { type: 'application/zip' }), { status: 200 });
-      })
-    );
 
     await expect(backupApi.download('backup.zip')).resolves.toBeUndefined();
     expect(createObjectURL).toHaveBeenCalled();

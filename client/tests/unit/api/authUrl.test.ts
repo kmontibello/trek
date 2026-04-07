@@ -193,6 +193,7 @@ describe('clearImageQueue', () => {
     it('removes queued items so they never execute after active slots drain', async () => {
       const resolvers: Array<() => void> = [];
       const createObjectURLSpy = vi.spyOn(URL, 'createObjectURL');
+      createObjectURLSpy.mockClear(); // vi.spyOn returns the same vi.fn() set in setup.ts; reset accumulated calls from prior tests
 
       vi.spyOn(globalThis, 'fetch').mockImplementation(async () => {
         await new Promise<void>(r => resolvers.push(r));
