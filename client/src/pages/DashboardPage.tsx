@@ -15,7 +15,7 @@ import { useToast } from '../components/shared/Toast'
 import {
   Plus, Calendar, Trash2, Edit2, Map, ChevronDown, ChevronUp,
   Archive, ArchiveRestore, Clock, MapPin, Settings, X, ArrowRightLeft, Users,
-  LayoutGrid, List, Copy, Bell, CircleCheck,
+  LayoutGrid, List, Copy, Bell, CheckCircle2,
 } from 'lucide-react'
 import { useCanDo } from '../store/permissionsStore'
 
@@ -316,7 +316,7 @@ function MobileTripCard({ trip, onEdit, onCopy, onDelete, onArchive, onClick, t,
               {status === 'ongoing' ? (
                 <span className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.8)] animate-pulse" />
               ) : status === 'past' ? (
-                <CircleCheck size={10} />
+                <CheckCircle2 size={10} />
               ) : (
                 <Clock size={10} />
               )}
@@ -408,7 +408,7 @@ function TripCard({ trip, onEdit, onCopy, onDelete, onArchive, onClick, t, local
               {status === 'ongoing' ? (
                 <span className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.8)] animate-pulse" />
               ) : status === 'past' ? (
-                <CircleCheck size={10} />
+                <CheckCircle2 size={10} />
               ) : (
                 <Clock size={10} />
               )}
