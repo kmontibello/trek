@@ -54,9 +54,9 @@ jobs:
           fi
           echo "Target: $TARGET"
 
-          # Count existing prerelease tags for this target and increment
-          N=$(git tag -l "v${TARGET}-pre.*" | wc -l)
-          N=$((N + 1))
+          # Find the highest existing prerelease N for this target and increment
+          LAST_N=$(git tag -l "v${TARGET}-pre.*" | sed 's/.*-pre\.//' | sort -n | tail -1)
+          N=$(( ${LAST_N:-0} + 1 ))
 
           NEW_VERSION="${TARGET}-pre.${N}"
           echo "VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
@@ -151,10 +151,25 @@ jobs:
             -t mauriceboe/trek:latest-pre \
             -t mauriceboe/trek:$MAJOR_TAG \
             -t mauriceboe/trek:$VERSION \
-            -t mauriceboe/nomad:latest-pre \
-            -t mauriceboe/nomad:$MAJOR_TAG \
-            -t mauriceboe/nomad:$VERSION \
             "${digests[@]}"
 
       - name: Inspect manifest
         run: docker buildx imagetools inspect mauriceboe/trek:latest-pre
+
+      - name: Clean up old prerelease tags
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          KEEP=5
+          VERSION=${{ needs.version-bump.outputs.version }}
+          BASE_VERSION="$(echo "$VERSION" | sed 's/-pre\..*//')"
+          git fetch --tags
+          mapfile -t ALL_TAGS < <(git tag -l "v${BASE_VERSION}-pre.*" | sort -t. -k4 -n)
+          TOTAL=${#ALL_TAGS[@]}
+          DELETE_COUNT=$((TOTAL - KEEP))
+          if [ "$DELETE_COUNT" -gt 0 ]; then
+            for TAG in "${ALL_TAGS[@]:0:$DELETE_COUNT}"; do
+              echo "Deleting old prerelease tag: $TAG"
+              git push origin --delete "$TAG"
+            done
+          fi

@@ -21,12 +21,24 @@ export function utcSuffix(ts: string | null | undefined): string | null {
 }
 
 export function compareVersions(a: string, b: string): number {
-  const pa = a.split('.').map(Number);
-  const pb = b.split('.').map(Number);
-  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
-    const na = pa[i] || 0, nb = pb[i] || 0;
+  const parse = (v: string) => {
+    const [base, pre] = v.split('-pre.');
+    const parts = base.split('.').map(Number);
+    const preN = pre !== undefined ? parseInt(pre, 10) : null;
+    return { parts, preN };
+  };
+  const pa = parse(a), pb = parse(b);
+  for (let i = 0; i < Math.max(pa.parts.length, pb.parts.length); i++) {
+    const na = pa.parts[i] || 0, nb = pb.parts[i] || 0;
     if (na > nb) return 1;
     if (na < nb) return -1;
+  }
+  // Equal base: stable > prerelease; higher preN wins among prereleases
+  if (pa.preN === null && pb.preN !== null) return 1;
+  if (pa.preN !== null && pb.preN === null) return -1;
+  if (pa.preN !== null && pb.preN !== null) {
+    if (pa.preN > pb.preN) return 1;
+    if (pa.preN < pb.preN) return -1;
   }
   return 0;
 }
@@ -304,7 +316,7 @@ export async function getGithubReleases(perPage: string = '10', page: string = '
 }
 
 export async function checkVersion() {
-  const currentVersion: string = process.env.APP_VERSION ?? require('../../package.json').version;
+  const currentVersion: string = process.env.APP_VERSION || require('../../package.json').version;
   const isPrerelease = currentVersion.includes('-pre.');
   const fallback = { current: currentVersion, latest: currentVersion, update_available: false, is_docker: isDocker, is_prerelease: isPrerelease };
   try {
