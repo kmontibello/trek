@@ -8,6 +8,8 @@ const de: Record<string, string | { name: string; category: string }[]> = {
   'common.loading': 'Laden...',
   'common.import': 'Importieren',
   'common.error': 'Fehler',
+  'common.unknownError': 'Unbekannter Fehler',
+  'common.tooManyAttempts': 'Zu viele Versuche. Bitte versuchen Sie es später erneut.',
   'common.back': 'Zurück',
   'common.all': 'Alle',
   'common.close': 'Schließen',
@@ -414,6 +416,10 @@ const de: Record<string, string | { name: string; category: string }[]> = {
   'login.mfaHint': 'Google Authenticator, Authy oder eine andere TOTP-App öffnen.',
   'login.mfaBack': '← Zurück zur Anmeldung',
   'login.mfaVerify': 'Bestätigen',
+  'login.invalidInviteLink': 'Ungültiger oder abgelaufener Einladungslink',
+  'login.oidcFailed': 'OIDC-Anmeldung fehlgeschlagen',
+  'login.usernameRequired': 'Benutzername ist erforderlich',
+  'login.passwordMinLength': 'Das Passwort muss mindestens 8 Zeichen lang sein',
 
   // Register
   'register.passwordMismatch': 'Passwörter stimmen nicht überein',
@@ -1087,6 +1093,9 @@ const de: Record<string, string | { name: string; category: string }[]> = {
 
   // Files
   'files.title': 'Dateien',
+  'files.pageTitle': 'Dateien & Dokumente',
+  'files.subtitle': '{count} Dateien für {trip}',
+  'files.downloadPdf': 'PDF herunterladen',
   'files.count': '{count} Dateien',
   'files.countSingular': '1 Datei',
   'files.uploaded': '{count} hochgeladen',
@@ -1333,6 +1342,13 @@ const de: Record<string, string | { name: string; category: string }[]> = {
   'backup.keep.forever': 'Immer behalten',
 
   // Photos
+  'photos.title': 'Fotos',
+  'photos.subtitle': '{count} Fotos für {trip}',
+  'photos.dropHere': 'Fotos hier ablegen...',
+  'photos.dropHereActive': 'Fotos hier ablegen',
+  'photos.captionForAll': 'Beschriftung (für alle)',
+  'photos.captionPlaceholder': 'Optionale Beschriftung...',
+  'photos.addCaption': 'Beschriftung hinzufügen...',
   'photos.allDays': 'Alle Tage',
   'photos.noPhotos': 'Noch keine Fotos',
   'photos.uploadHint': 'Lade deine Reisefotos hoch',
@@ -1366,6 +1382,7 @@ const de: Record<string, string | { name: string; category: string }[]> = {
   'planner.routeCalculated': 'Route berechnet',
   'planner.routeCalcFailed': 'Route konnte nicht berechnet werden',
   'planner.routeError': 'Fehler bei der Routenberechnung',
+  'planner.icsExportFailed': 'ICS-Export fehlgeschlagen',
   'planner.routeOptimized': 'Route optimiert',
   'planner.reservationUpdated': 'Reservierung aktualisiert',
   'planner.reservationAdded': 'Reservierung hinzugefügt',

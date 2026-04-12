@@ -8,6 +8,8 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'common.loading': 'Loading...',
   'common.import': 'Import',
   'common.error': 'Error',
+  'common.unknownError': 'Unknown error',
+  'common.tooManyAttempts': 'Too many attempts. Please try again later.',
   'common.back': 'Back',
   'common.all': 'All',
   'common.close': 'Close',
@@ -438,6 +440,10 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'login.mfaHint': 'Open Google Authenticator, Authy, or another TOTP app.',
   'login.mfaBack': '← Back to sign in',
   'login.mfaVerify': 'Verify',
+  'login.invalidInviteLink': 'Invalid or expired invite link',
+  'login.oidcFailed': 'OIDC login failed',
+  'login.usernameRequired': 'Username is required',
+  'login.passwordMinLength': 'Password must be at least 8 characters',
 
   // Register
   'register.passwordMismatch': 'Passwords do not match',
@@ -1109,6 +1115,9 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // Files
   'files.title': 'Files',
+  'files.pageTitle': 'Files & Documents',
+  'files.subtitle': '{count} files for {trip}',
+  'files.downloadPdf': 'Download PDF',
   'files.count': '{count} files',
   'files.countSingular': '1 file',
   'files.uploaded': '{count} uploaded',
@@ -1200,7 +1209,6 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'packing.saveAsTemplate': 'Save as template',
   'packing.templateName': 'Template name',
   'packing.templateSaved': 'Packing list saved as template',
-  'packing.assignUser': 'Assign user',
   'packing.bags': 'Bags',
   'packing.noBag': 'Unassigned',
   'packing.totalWeight': 'Total weight',
@@ -1356,6 +1364,13 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'backup.keep.forever': 'Keep forever',
 
   // Photos
+  'photos.title': 'Photos',
+  'photos.subtitle': '{count} photos for {trip}',
+  'photos.dropHere': 'Drop photos here...',
+  'photos.dropHereActive': 'Drop photos here',
+  'photos.captionForAll': 'Caption (for all)',
+  'photos.captionPlaceholder': 'Optional caption...',
+  'photos.addCaption': 'Add caption...',
   'photos.allDays': 'All Days',
   'photos.noPhotos': 'No photos yet',
   'photos.uploadHint': 'Upload your travel photos',
@@ -1389,6 +1404,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'planner.routeCalculated': 'Route calculated',
   'planner.routeCalcFailed': 'Route could not be calculated',
   'planner.routeError': 'Error calculating route',
+  'planner.icsExportFailed': 'ICS export failed',
   'planner.routeOptimized': 'Route optimized',
   'planner.reservationUpdated': 'Reservation updated',
   'planner.reservationAdded': 'Reservation added',

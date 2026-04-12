@@ -8,6 +8,8 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   'common.loading': 'Betöltés...',
   'common.import': 'Importálás',
   'common.error': 'Hiba',
+  'common.unknownError': 'Ismeretlen hiba',
+  'common.tooManyAttempts': 'Túl sok próbálkozás. Kérjük, próbálja újra később.',
   'common.back': 'Vissza',
   'common.all': 'Összes',
   'common.close': 'Bezárás',
@@ -411,6 +413,10 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   'login.mfaHint': 'Nyisd meg a Google Authenticator, Authy vagy más TOTP alkalmazást.',
   'login.mfaBack': '← Vissza a bejelentkezéshez',
   'login.mfaVerify': 'Ellenőrzés',
+  'login.invalidInviteLink': 'Érvénytelen vagy lejárt meghívólink',
+  'login.oidcFailed': 'OIDC bejelentkezés sikertelen',
+  'login.usernameRequired': 'A felhasználónév kötelező',
+  'login.passwordMinLength': 'A jelszónak legalább 8 karakter hosszúnak kell lennie',
 
   // Regisztráció
   'register.passwordMismatch': 'A jelszavak nem egyeznek',
@@ -1081,9 +1087,13 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   'budget.settlement': 'Elszámolás',
   'budget.settlementInfo': 'Kattints egy tag avatárjára egy költségvetési tételen a zöld jelöléshez — ez azt jelenti, hogy fizetett. Az elszámolás ezután mutatja, ki kinek mennyivel tartozik.',
   'budget.netBalances': 'Nettó egyenlegek',
+  'budget.linkedToReservation': 'Foglaláshoz kapcsolva — ott módosítsa a nevet',
 
   // Fájlok
   'files.title': 'Fájlok',
+  'files.pageTitle': 'Fájlok és dokumentumok',
+  'files.subtitle': '{count} fájl a következőhöz: {trip}',
+  'files.downloadPdf': 'PDF letöltése',
   'files.count': '{count} fájl',
   'files.countSingular': '1 fájl',
   'files.uploaded': '{count} feltöltve',
@@ -1330,6 +1340,13 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   'backup.keep.forever': 'Örökre megőrzés',
 
   // Fotók
+  'photos.title': 'Fotók',
+  'photos.subtitle': '{count} fotó a következőhöz: {trip}',
+  'photos.dropHere': 'Húzza ide a fényképeket...',
+  'photos.dropHereActive': 'Húzza ide a fényképeket',
+  'photos.captionForAll': 'Felirat (mindenkinek)',
+  'photos.captionPlaceholder': 'Opcionális felirat...',
+  'photos.addCaption': 'Felirat hozzáadása...',
   'photos.allDays': 'Minden nap',
   'photos.noPhotos': 'Még nincsenek fotók',
   'photos.uploadHint': 'Töltsd fel az úti fotóidat',
@@ -1363,6 +1380,7 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   'planner.routeCalculated': 'Útvonal kiszámítva',
   'planner.routeCalcFailed': 'Nem sikerült kiszámítani az útvonalat',
   'planner.routeError': 'Hiba az útvonalszámítás során',
+  'planner.icsExportFailed': 'Az ICS-exportálás sikertelen',
   'planner.routeOptimized': 'Útvonal optimalizálva',
   'planner.reservationUpdated': 'Foglalás frissítve',
   'planner.reservationAdded': 'Foglalás hozzáadva',

@@ -8,6 +8,8 @@ const zhTw: Record<string, string> = {
   'common.loading': '載入中...',
   'common.import': '匯入',
   'common.error': '錯誤',
+  'common.unknownError': '未知錯誤',
+  'common.tooManyAttempts': '嘗試次數過多，請稍後再試。',
   'common.back': '返回',
   'common.all': '全部',
   'common.close': '關閉',
@@ -125,6 +127,8 @@ const zhTw: Record<string, string> = {
   'dashboard.coverRemoveError': '移除失敗',
   'dashboard.titleRequired': '標題為必填項',
   'dashboard.endDateError': '結束日期必須晚於開始日期',
+  'dashboard.dayCount': '天數',
+  'dashboard.dayCountHint': '未設定旅行日期時的規劃天數。',
 
   // Settings
   'settings.title': '設定',
@@ -428,6 +432,10 @@ const zhTw: Record<string, string> = {
   'login.mfaHint': '開啟 Google Authenticator、Authy 或其他 TOTP 應用。',
   'login.mfaBack': '← 返回登入',
   'login.mfaVerify': '驗證',
+  'login.invalidInviteLink': '邀請連結無效或已過期',
+  'login.oidcFailed': 'OIDC 登入失敗',
+  'login.usernameRequired': '使用者名稱為必填',
+  'login.passwordMinLength': '密碼至少需要8個字元',
   'login.oidc.tokenFailed': '認證失敗。',
   'login.oidc.invalidState': '會話無效，請重試。',
   'login.demoFailed': '演示登入失敗',
@@ -1108,6 +1116,9 @@ const zhTw: Record<string, string> = {
 
   // Files
   'files.title': '檔案',
+  'files.pageTitle': '檔案與文件',
+  'files.subtitle': '{trip} 的 {count} 個檔案',
+  'files.downloadPdf': '下載 PDF',
   'files.count': '{count} 個檔案',
   'files.countSingular': '1 個檔案',
   'files.uploaded': '已上傳 {count} 個',
@@ -1354,6 +1365,13 @@ const zhTw: Record<string, string> = {
   'backup.keep.forever': '永久保留',
 
   // Photos
+  'photos.title': '照片',
+  'photos.subtitle': '{trip} 的 {count} 張照片',
+  'photos.dropHere': '將照片拖放至此...',
+  'photos.dropHereActive': '將照片拖放至此',
+  'photos.captionForAll': '標題（所有）',
+  'photos.captionPlaceholder': '可選標題...',
+  'photos.addCaption': '新增標題...',
   'photos.allDays': '所有天',
   'photos.noPhotos': '暫無照片',
   'photos.uploadHint': '上傳你的旅行照片',
@@ -1387,6 +1405,7 @@ const zhTw: Record<string, string> = {
   'planner.routeCalculated': '路線已計算',
   'planner.routeCalcFailed': '無法計算路線',
   'planner.routeError': '路線計算錯誤',
+  'planner.icsExportFailed': 'ICS 匯出失敗',
   'planner.routeOptimized': '路線已最佳化',
   'planner.reservationUpdated': '預訂已更新',
   'planner.reservationAdded': '預訂已新增',

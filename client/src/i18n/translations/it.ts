@@ -8,6 +8,8 @@ const it: Record<string, string | { name: string; category: string }[]> = {
   'common.loading': 'Caricamento...',
   'common.import': 'Importa',
   'common.error': 'Errore',
+  'common.unknownError': 'Errore sconosciuto',
+  'common.tooManyAttempts': 'Troppi tentativi. Riprova più tardi.',
   'common.back': 'Indietro',
   'common.all': 'Tutti',
   'common.close': 'Chiudi',
@@ -411,6 +413,10 @@ const it: Record<string, string | { name: string; category: string }[]> = {
   'login.mfaHint': 'Apri Google Authenticator, Authy o un\'altra app TOTP.',
   'login.mfaBack': '← Torna all\'accesso',
   'login.mfaVerify': 'Verifica',
+  'login.invalidInviteLink': 'Link di invito non valido o scaduto',
+  'login.oidcFailed': 'Accesso OIDC non riuscito',
+  'login.usernameRequired': 'Il nome utente è obbligatorio',
+  'login.passwordMinLength': 'La password deve contenere almeno 8 caratteri',
 
   // Register
   'register.passwordMismatch': 'Le password non corrispondono',
@@ -1081,9 +1087,13 @@ const it: Record<string, string | { name: string; category: string }[]> = {
   'budget.settlement': 'Regolamento',
   'budget.settlementInfo': 'Clicca sull\'avatar di un membro su una voce di budget per contrassegnarlo in verde — significa che ha pagato. Il regolamento mostra poi chi deve quanto a chi.',
   'budget.netBalances': 'Saldi netti',
+  'budget.linkedToReservation': 'Collegato a una prenotazione — modifica il nome lì',
 
   // Files
   'files.title': 'File',
+  'files.pageTitle': 'File e documenti',
+  'files.subtitle': '{count} file per {trip}',
+  'files.downloadPdf': 'Scarica PDF',
   'files.count': '{count} file',
   'files.countSingular': '1 documento',
   'files.uploaded': '{count} caricati',
@@ -1330,6 +1340,13 @@ const it: Record<string, string | { name: string; category: string }[]> = {
   'backup.keep.forever': 'Conserva per sempre',
 
   // Photos
+  'photos.title': 'Foto',
+  'photos.subtitle': '{count} foto per {trip}',
+  'photos.dropHere': 'Trascina le foto qui...',
+  'photos.dropHereActive': 'Trascina le foto qui',
+  'photos.captionForAll': 'Didascalia (per tutti)',
+  'photos.captionPlaceholder': 'Didascalia opzionale...',
+  'photos.addCaption': 'Aggiungi didascalia...',
   'photos.allDays': 'Tutti i giorni',
   'photos.noPhotos': 'Ancora nessuna foto',
   'photos.uploadHint': 'Carica le foto del tuo viaggio',
@@ -1363,6 +1380,7 @@ const it: Record<string, string | { name: string; category: string }[]> = {
   'planner.routeCalculated': 'Percorso calcolato',
   'planner.routeCalcFailed': 'Il percorso non è stato calcolato',
   'planner.routeError': 'Errore nel calcolo del percorso',
+  'planner.icsExportFailed': 'Esportazione ICS non riuscita',
   'planner.routeOptimized': 'Percorso ottimizzato',
   'planner.reservationUpdated': 'Prenotazione aggiornata',
   'planner.reservationAdded': 'Prenotazione aggiunta',

@@ -12,6 +12,8 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   'common.loading': 'جارٍ التحميل...',
   'common.import': 'استيراد',
   'common.error': 'خطأ',
+  'common.unknownError': 'خطأ غير معروف',
+  'common.tooManyAttempts': 'محاولات كثيرة جدًا. يرجى المحاولة لاحقًا.',
   'common.back': 'رجوع',
   'common.all': 'الكل',
   'common.close': 'إغلاق',
@@ -416,6 +418,10 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   'login.mfaHint': 'افتح Google Authenticator أو Authy أو أي تطبيق TOTP آخر.',
   'login.mfaBack': '← العودة لتسجيل الدخول',
   'login.mfaVerify': 'تحقق',
+  'login.invalidInviteLink': 'رابط الدعوة غير صالح أو منتهي الصلاحية',
+  'login.oidcFailed': 'فشل تسجيل الدخول عبر OIDC',
+  'login.usernameRequired': 'اسم المستخدم مطلوب',
+  'login.passwordMinLength': 'يجب أن تكون كلمة المرور 8 أحرف على الأقل',
 
   // Register
   'register.passwordMismatch': 'كلمتا المرور غير متطابقتين',
@@ -1084,9 +1090,13 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   'budget.settlement': 'التسوية',
   'budget.settlementInfo': 'انقر على صورة العضو في بند الميزانية لتحديده باللون الأخضر — وهذا يعني أنه دفع. ثم تُظهر التسوية من يدين لمن وبكم.',
   'budget.netBalances': 'الأرصدة الصافية',
+  'budget.linkedToReservation': 'مرتبط بحجز — قم بتحرير الاسم هناك',
 
   // Files
   'files.title': 'الملفات',
+  'files.pageTitle': 'الملفات والمستندات',
+  'files.subtitle': '{count} ملف لـ {trip}',
+  'files.downloadPdf': 'تنزيل PDF',
   'files.count': '{count} ملفات',
   'files.countSingular': 'ملف واحد',
   'files.uploaded': 'تم رفع {count}',
@@ -1333,6 +1343,13 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   'backup.keep.forever': 'الاحتفاظ للأبد',
 
   // Photos
+  'photos.title': 'صور',
+  'photos.subtitle': '{count} صورة لـ {trip}',
+  'photos.dropHere': 'أسقط الصور هنا...',
+  'photos.dropHereActive': 'أسقط الصور هنا',
+  'photos.captionForAll': 'تعليق (للجميع)',
+  'photos.captionPlaceholder': 'تعليق اختياري...',
+  'photos.addCaption': 'إضافة تعليق...',
   'photos.allDays': 'كل الأيام',
   'photos.noPhotos': 'لا توجد صور بعد',
   'photos.uploadHint': 'ارفع صور رحلتك',
@@ -1366,6 +1383,7 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   'planner.routeCalculated': 'تم حساب المسار',
   'planner.routeCalcFailed': 'تعذر حساب المسار',
   'planner.routeError': 'خطأ أثناء حساب المسار',
+  'planner.icsExportFailed': 'فشل تصدير ICS',
   'planner.routeOptimized': 'تم تحسين المسار',
   'planner.reservationUpdated': 'تم تحديث الحجز',
   'planner.reservationAdded': 'تمت إضافة الحجز',

@@ -8,6 +8,8 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   'common.loading': 'Načítání...',
   'common.import': 'Importovat',
   'common.error': 'Chyba',
+  'common.unknownError': 'Neznámá chyba',
+  'common.tooManyAttempts': 'Příliš mnoho pokusů. Zkuste to prosím znovu.',
   'common.back': 'Zpět',
   'common.all': 'Vše',
   'common.close': 'Zavřít',
@@ -411,6 +413,10 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   'login.mfaHint': 'Otevřete Google Authenticator, Authy nebo jinou TOTP aplikaci.',
   'login.mfaBack': '← Zpět k přihlášení',
   'login.mfaVerify': 'Ověřit',
+  'login.invalidInviteLink': 'Neplatný nebo vypršelý odkaz s pozvánkou',
+  'login.oidcFailed': 'Přihlášení přes OIDC se nezdařilo',
+  'login.usernameRequired': 'Uživatelské jméno je povinné',
+  'login.passwordMinLength': 'Heslo musí mít alespoň 8 znaků',
 
   // Registrace (Register)
   'register.passwordMismatch': 'Hesla se neshodují',
@@ -1082,9 +1088,13 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   'budget.settlement': 'Vyúčtování',
   'budget.settlementInfo': 'Klikněte na avatar člena u rozpočtové položky pro zelené označení – to znamená, že zaplatil. Vyúčtování pak ukazuje, kdo komu a kolik dluží.',
   'budget.netBalances': 'Čisté zůstatky',
+  'budget.linkedToReservation': 'Propojeno s rezervací — upravte název tam',
 
   // Soubory (Files)
   'files.title': 'Soubory',
+  'files.pageTitle': 'Soubory a dokumenty',
+  'files.subtitle': '{count} souborů pro {trip}',
+  'files.downloadPdf': 'Stáhnout PDF',
   'files.count': '{count} souborů',
   'files.countSingular': '1 soubor',
   'files.uploaded': '{count} nahráno',
@@ -1331,6 +1341,13 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   'backup.keep.forever': 'Uchovávat navždy',
 
   // Fotky
+  'photos.title': 'Fotografie',
+  'photos.subtitle': '{count} fotek pro {trip}',
+  'photos.dropHere': 'Přetáhněte fotografie sem...',
+  'photos.dropHereActive': 'Přetáhněte fotografie sem',
+  'photos.captionForAll': 'Popisek (pro všechny)',
+  'photos.captionPlaceholder': 'Volitelný popisek...',
+  'photos.addCaption': 'Přidat popisek...',
   'photos.allDays': 'Všechny dny',
   'photos.noPhotos': 'Zatím žádné fotky',
   'photos.uploadHint': 'Nahrajte své cestovní fotky',
@@ -1364,6 +1381,7 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   'planner.routeCalculated': 'Trasa vypočtena',
   'planner.routeCalcFailed': 'Trasu se nepodařilo vypočítat',
   'planner.routeError': 'Chyba při výpočtu trasy',
+  'planner.icsExportFailed': 'Export ICS se nezdařil',
   'planner.routeOptimized': 'Trasa optimalizována',
   'planner.reservationUpdated': 'Rezervace aktualizována',
   'planner.reservationAdded': 'Rezervace přidána',
