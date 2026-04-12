@@ -284,6 +284,6 @@ describe('TripFormModal', () => {
     const submitBtns = screen.getAllByText('Create New Trip');
     const submitBtn = submitBtns.find(el => el.closest('button'))!;
     await user.click(submitBtn.closest('button')!);
-    await waitFor(() => expect(screen.getByText('Saving…')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Saving...')).toBeInTheDocument());
   });
 });

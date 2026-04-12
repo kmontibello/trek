@@ -55,7 +55,7 @@ describe('GitHubPanel', () => {
 
   it('FE-ADMIN-GH-002: all support links have correct href and target=_blank', async () => {
     render(<GitHubPanel />);
-    await waitFor(() => expect(screen.queryByText('Loading…')).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByText('Loading...')).not.toBeInTheDocument());
 
     const kofi = screen.getByText('Ko-fi').closest('a')!;
     expect(kofi).toHaveAttribute('href', 'https://ko-fi.com/mauriceboe');
@@ -272,7 +272,7 @@ describe('GitHubPanel', () => {
 
   it('FE-ADMIN-GH-016: support card hover effects fire without error', async () => {
     render(<GitHubPanel />);
-    await waitFor(() => expect(screen.queryByText('Loading…')).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByText('Loading...')).not.toBeInTheDocument());
 
     const kofiLink = screen.getByText('Ko-fi').closest('a')!;
     fireEvent.mouseEnter(kofiLink);

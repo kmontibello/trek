@@ -47,7 +47,7 @@ describe('AuditLogPanel', () => {
       }),
     );
     render(<AuditLogPanel serverTimezone="UTC" />);
-    expect(screen.getByText('Loading…')).toBeInTheDocument();
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
     expect(document.querySelector('table')).not.toBeInTheDocument();
   });
 
