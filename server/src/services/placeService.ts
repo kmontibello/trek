@@ -1,6 +1,7 @@
 import { XMLParser } from 'fast-xml-parser';
 import { db, getPlaceWithTags } from '../db/database';
 import { loadTagsByPlaceIds } from './queryHelpers';
+import { checkSsrf } from '../utils/ssrfGuard';
 import { Place } from '../types';
 
 interface PlaceWithCategory extends Place {
@@ -309,6 +310,10 @@ export async function importGoogleList(tripId: string, url: string) {
   let listId: string | null = null;
   let resolvedUrl = url;
 
+  // SSRF guard: validate user-supplied URL before fetching
+  const ssrf = await checkSsrf(url);
+  if (!ssrf.allowed) return { error: 'URL is not allowed', status: 400 };
+
   // Follow redirects for short URLs (maps.app.goo.gl, goo.gl)
   if (url.includes('goo.gl') || url.includes('maps.app')) {
     const redirectRes = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(10000) });
@@ -403,6 +408,121 @@ export async function importGoogleList(tripId: string, url: string) {
   insertAll();
 
   return { places: created, listName, skipped };
+}
+
+// ---------------------------------------------------------------------------
+// Import Naver Maps list
+// ---------------------------------------------------------------------------
+
+export async function importNaverList(
+  tripId: string,
+  url: string,
+): Promise<{ places: any[]; listName: string } | { error: string; status: number }> {
+  let resolvedUrl = url;
+  const limit = 20;
+
+  // SSRF guard: validate user-supplied URL before fetching
+  const ssrf = await checkSsrf(url);
+  if (!ssrf.allowed) return { error: 'URL is not allowed', status: 400 };
+
+  // Resolve naver.me short links to the canonical map.naver.com folder URL.
+  let parsedUrl: URL;
+  try { parsedUrl = new URL(url); } catch { return { error: 'Invalid URL', status: 400 }; }
+  if (parsedUrl.hostname === 'naver.me') {
+    const redirectRes = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(10000) });
+    resolvedUrl = redirectRes.url;
+  }
+
+  const folderMatch = resolvedUrl.match(/favorite\/myPlace\/folder\/([A-Za-z0-9_-]+)/i);
+  const folderId = folderMatch?.[1] || null;
+  if (!folderId) {
+    return { error: 'Could not extract folder ID from URL. Please use a shared Naver Maps list link.', status: 400 };
+  }
+
+  const fetchPage = async (start: number) => {
+    const apiUrl = `https://pages.map.naver.com/save-pages/api/maps-bookmark/v3/shares/${encodeURIComponent(folderId)}/bookmarks?placeInfo=true&start=${start}&limit=${limit}&sort=lastUseTime&mcids=ALL&createIdNo=true`;
+    const apiRes = await fetch(apiUrl, {
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      },
+      signal: AbortSignal.timeout(15000),
+    });
+
+    if (!apiRes.ok) {
+      return { error: 'Failed to fetch list from Naver Maps', status: 502 } as const;
+    }
+
+    try {
+      const data = await apiRes.json() as {
+        folder?: { bookmarkCount?: number; name?: string };
+        bookmarkList?: any[];
+      };
+      return { data } as const;
+    } catch {
+      return { error: 'Invalid list data received from Naver Maps', status: 400 } as const;
+    }
+  };
+
+  const firstPage = await fetchPage(0);
+  if ('error' in firstPage) {
+    return { error: firstPage.error, status: firstPage.status };
+  }
+
+  const listName = firstPage.data.folder?.name || 'Naver Maps List';
+  const totalCount = typeof firstPage.data.folder?.bookmarkCount === 'number'
+    ? firstPage.data.folder.bookmarkCount
+    : (firstPage.data.bookmarkList?.length || 0);
+
+  const allItems: any[] = [...(firstPage.data.bookmarkList || [])];
+  for (let start = limit; start < totalCount; start += limit) {
+    const page = await fetchPage(start);
+    if ('error' in page) {
+      return { error: page.error, status: page.status };
+    }
+    const pageItems = page.data.bookmarkList || [];
+    if (!Array.isArray(pageItems) || pageItems.length === 0) break;
+    allItems.push(...pageItems);
+  }
+
+  if (allItems.length === 0) {
+    return { error: 'List is empty or could not be read', status: 400 };
+  }
+
+  const places: { name: string; lat: number; lng: number; notes: string | null; address: string | null }[] = [];
+  for (const item of allItems) {
+    const lat = Number(item?.py);
+    const lng = Number(item?.px);
+    const name = typeof item?.name === 'string' && item.name.trim()
+      ? item.name.trim()
+      : (typeof item?.displayName === 'string' ? item.displayName.trim() : '');
+    const note = typeof item?.memo === 'string' && item.memo.trim() ? item.memo.trim() : null;
+    const address = typeof item?.address === 'string' && item.address.trim() ? item.address.trim() : null;
+
+    if (name && Number.isFinite(lat) && Number.isFinite(lng)) {
+      places.push({ name, lat, lng, notes: note, address });
+    }
+  }
+
+  if (places.length === 0) {
+    return { error: 'No places with coordinates found in list', status: 400 };
+  }
+
+  const insertStmt = db.prepare(`
+    INSERT INTO places (trip_id, name, lat, lng, address, notes, transport_mode)
+    VALUES (?, ?, ?, ?, ?, ?, 'walking')
+  `);
+  const created: any[] = [];
+  const insertAll = db.transaction(() => {
+    for (const p of places) {
+      const result = insertStmt.run(tripId, p.name, p.lat, p.lng, p.address, p.notes);
+      const place = getPlaceWithTags(Number(result.lastInsertRowid));
+      created.push(place);
+    }
+  });
+  insertAll();
+
+  return { places: created, listName };
 }
 
 // ---------------------------------------------------------------------------

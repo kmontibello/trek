@@ -897,10 +897,15 @@ const de: Record<string, string | { name: string; category: string }[]> = {
   'places.gpxImported': '{count} Orte aus GPX importiert',
   'places.urlResolved': 'Ort aus URL importiert',
   'places.gpxError': 'GPX-Import fehlgeschlagen',
+  'places.importList': 'Listenimport',
   'places.importGoogleList': 'Google Liste',
+  'places.importNaverList': 'Naver Liste',
   'places.googleListHint': 'Geteilten Google Maps Listen-Link einfügen, um alle Orte zu importieren.',
   'places.googleListImported': '{count} Orte aus "{list}" importiert',
   'places.googleListError': 'Google Maps Liste konnte nicht importiert werden',
+  'places.naverListHint': 'Geteilten Naver Maps Listen-Link einfügen, um alle Orte zu importieren.',
+  'places.naverListImported': '{count} Orte aus "{list}" importiert',
+  'places.naverListError': 'Naver Maps Liste konnte nicht importiert werden',
   'places.viewDetails': 'Details anzeigen',
   'places.assignToDay': 'Zu welchem Tag hinzufügen?',
   'places.all': 'Alle',
@@ -1670,6 +1675,7 @@ const de: Record<string, string | { name: string; category: string }[]> = {
   'undo.lock': 'Ortssperre umgeschaltet',
   'undo.importGpx': 'GPX-Import',
   'undo.importGoogleList': 'Google Maps-Import',
+  'undo.importNaverList': 'Naver Maps-Import',
 
   // Notifications
   'notifications.title': 'Benachrichtigungen',

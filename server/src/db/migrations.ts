@@ -885,6 +885,17 @@ function runMigrations(db: Database.Database): void {
         ins.run(r.trip_id, r.category, idx++);
       }
     },
+    // Migration: Naver list import addon (default off)
+    () => {
+      try {
+        db.prepare(`
+          INSERT OR IGNORE INTO addons (id, name, description, type, icon, enabled, sort_order)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
+        `).run('naver_list_import', 'Naver List Import', 'Import places from shared Naver Maps lists', 'trip', 'Link2', 0, 13);
+      } catch (err: any) {
+        console.warn('[migrations] Non-fatal migration step failed:', err);
+      }
+    },
     // Migration: OAuth 2.1 clients, consents, and tokens for MCP
     () => {
       db.exec(`
