@@ -10,6 +10,9 @@ const es: Record<string, string> = {
   'common.add': 'Añadir',
   'common.loading': 'Cargando...',
   'common.import': 'Importar',
+  'common.select': 'Seleccionar',
+  'common.selectAll': 'Seleccionar todo',
+  'common.deselectAll': 'Deseleccionar todo',
   'common.error': 'Error',
   'common.unknownError': 'Error desconocido',
   'common.tooManyAttempts': 'Demasiados intentos. Inténtelo de nuevo más tarde.',
@@ -840,6 +843,7 @@ const es: Record<string, string> = {
 
   // Trip Planner
   'trip.tabs.plan': 'Plan',
+  'trip.tabs.transports': 'Transportes',
   'trip.tabs.reservations': 'Reservas',
   'trip.tabs.reservationsShort': 'Reservas',
   'trip.tabs.packing': 'Lista de equipaje',
@@ -862,6 +866,8 @@ const es: Record<string, string> = {
   'trip.toast.reservationAdded': 'Reserva añadida',
   'trip.toast.deleted': 'Eliminado',
   'trip.confirm.deletePlace': '¿Seguro que quieres eliminar este lugar?',
+  'trip.confirm.deletePlaces': '¿Eliminar {count} lugares?',
+  'trip.toast.placesDeleted': '{count} lugares eliminados',
 
   // Day Plan Sidebar
   'dayplan.emptyDay': 'No hay lugares planificados para este día',
@@ -906,6 +912,17 @@ const es: Record<string, string> = {
   'places.importFileError': 'Importación fallida',
   'places.importAllSkipped': 'Todos los lugares ya estaban en el viaje.',
   'places.gpxImported': '{count} lugares importados desde GPX',
+  'places.gpxImportTypes': '¿Qué deseas importar?',
+  'places.gpxImportWaypoints': 'Puntos de ruta',
+  'places.gpxImportRoutes': 'Rutas',
+  'places.gpxImportTracks': 'Tracks (con geometría de ruta)',
+  'places.gpxImportNoneSelected': 'Selecciona al menos un tipo para importar.',
+  'places.kmlImportTypes': '¿Qué deseas importar?',
+  'places.kmlImportPoints': 'Puntos (Placemarks)',
+  'places.kmlImportPaths': 'Rutas (LineStrings)',
+  'places.kmlImportNoneSelected': 'Selecciona al menos un tipo.',
+  'places.selectionCount': '{count} seleccionado(s)',
+  'places.deleteSelected': 'Eliminar selección',
   'places.kmlKmzImported': '{count} lugares importados desde KMZ/KML',
   'places.urlResolved': 'Lugar importado desde URL',
   'places.importList': 'Importar lista',
@@ -922,6 +939,7 @@ const es: Record<string, string> = {
   'places.assignToDay': '¿A qué día añadirlo?',
   'places.all': 'Todo',
   'places.unplanned': 'Sin planificar',
+  'places.filterTracks': 'Rutas',
   'places.search': 'Buscar lugares...',
   'places.allCategories': 'Todas las categorías',
   'places.categoriesSelected': 'categorías',
@@ -1067,6 +1085,7 @@ const es: Record<string, string> = {
   'reservations.span.end': 'Fin',
   'reservations.span.ongoing': 'En curso',
   'reservations.validation.endBeforeStart': 'La fecha/hora de fin debe ser posterior a la de inicio',
+  'reservations.addBooking': 'Añadir reserva',
 
   // Budget
   'budget.title': 'Presupuesto',
@@ -1724,6 +1743,7 @@ const es: Record<string, string> = {
   'undo.reorder': 'Lugares reordenados',
   'undo.optimize': 'Ruta optimizada',
   'undo.deletePlace': 'Lugar eliminado',
+  'undo.deletePlaces': 'Lugares eliminados',
   'undo.moveDay': 'Lugar movido a otro día',
   'undo.lock': 'Bloqueo de lugar activado/desactivado',
   'undo.importGpx': 'Importación GPX',
@@ -2273,6 +2293,11 @@ const es: Record<string, string> = {
   // System notices — personal thank you
   'system_notice.v3_thankyou.title': 'Una nota personal de mi parte',
   'system_notice.v3_thankyou.body': 'Antes de seguir — quiero tomarme un momento.\n\nTREK empezó como un proyecto personal que construí para mis propios viajes. Nunca imaginé que crecería hasta convertirse en algo en lo que 4.000 de vosotros confían para planificar sus aventuras. Cada estrella, cada issue, cada solicitud de funcionalidad — los leo todos, y son lo que me mantiene en pie durante las noches largas entre un trabajo a jornada completa y la universidad.\n\nQuiero que sepáis: TREK siempre será open source, siempre self-hosted, siempre vuestro. Sin rastreo, sin suscripciones, sin letra pequeña. Solo una herramienta hecha por alguien que ama viajar tanto como vosotros.\n\nUn agradecimiento especial a [jubnl](https://github.com/jubnl) — te has convertido en un colaborador increíble. Mucho de lo que hace grande la versión 3.0 lleva tu huella. Gracias por creer en este proyecto cuando todavía era un borrador.\n\nY a cada uno de vosotros que reportó un bug, tradujo un texto, compartió TREK con un amigo o simplemente lo usó para planificar un viaje — **gracias**. Vosotros sois la razón de que esto exista.\n\nPor muchas más aventuras juntos.\n\n— Maurice\n\n---\n\n[Únete a la comunidad en Discord](https://discord.gg/7Q6M6jDwzf)\n\nSi TREK mejora tus viajes, un [pequeño café](https://ko-fi.com/mauriceboe) siempre mantiene las luces encendidas.',
+  'transport.addTransport': 'Add transport',
+  'transport.modalTitle.create': 'Add transport',
+  'transport.modalTitle.edit': 'Edit transport',
+  'transport.title': 'Transportes',
+  'transport.addManual': 'Transporte manual',
 }
 
 export default es

@@ -10,6 +10,9 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'common.add': 'Add',
   'common.loading': 'Loading...',
   'common.import': 'Import',
+  'common.select': 'Select',
+  'common.selectAll': 'Select all',
+  'common.deselectAll': 'Deselect all',
   'common.error': 'Error',
   'common.unknownError': 'Unknown error',
   'common.tooManyAttempts': 'Too many attempts. Please try again later.',
@@ -927,6 +930,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // Trip Planner
   'trip.tabs.plan': 'Plan',
+  'trip.tabs.transports': 'Transports',
   'trip.tabs.reservations': 'Bookings',
   'trip.tabs.reservationsShort': 'Book',
   'trip.tabs.packing': 'Packing List',
@@ -949,6 +953,8 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'trip.toast.reservationAdded': 'Reservation added',
   'trip.toast.deleted': 'Deleted',
   'trip.confirm.deletePlace': 'Are you sure you want to delete this place?',
+  'trip.confirm.deletePlaces': 'Delete {count} places?',
+  'trip.toast.placesDeleted': '{count} places deleted',
 
   // Day Plan Sidebar
   'dayplan.emptyDay': 'No places planned for this day',
@@ -993,6 +999,17 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'places.importFileError': 'Import failed',
   'places.importAllSkipped': 'All places were already in the trip.',
   'places.gpxImported': '{count} places imported from GPX',
+  'places.gpxImportTypes': 'What do you want to import?',
+  'places.gpxImportWaypoints': 'Waypoints',
+  'places.gpxImportRoutes': 'Routes',
+  'places.gpxImportTracks': 'Tracks (with path geometry)',
+  'places.gpxImportNoneSelected': 'Select at least one type to import.',
+  'places.kmlImportTypes': 'What do you want to import?',
+  'places.kmlImportPoints': 'Points (Placemarks)',
+  'places.kmlImportPaths': 'Paths (LineStrings)',
+  'places.kmlImportNoneSelected': 'Select at least one type to import.',
+  'places.selectionCount': '{count} selected',
+  'places.deleteSelected': 'Delete selected',
   'places.kmlKmzImported': '{count} places imported from KMZ/KML',
   'places.urlResolved': 'Place imported from URL',
   'places.importList': 'List Import',
@@ -1009,6 +1026,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'places.assignToDay': 'Add to which day?',
   'places.all': 'All',
   'places.unplanned': 'Unplanned',
+  'places.filterTracks': 'Tracks',
   'places.search': 'Search places...',
   'places.allCategories': 'All Categories',
   'places.categoriesSelected': 'categories',
@@ -1178,6 +1196,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'reservations.span.end': 'End',
   'reservations.span.ongoing': 'Ongoing',
   'reservations.validation.endBeforeStart': 'End date/time must be after start date/time',
+  'reservations.addBooking': 'Add booking',
 
   // Budget
   'budget.title': 'Budget',
@@ -1791,6 +1810,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'undo.reorder': 'Places reordered',
   'undo.optimize': 'Route optimized',
   'undo.deletePlace': 'Place deleted',
+  'undo.deletePlaces': 'Places deleted',
   'undo.moveDay': 'Place moved to another day',
   'undo.lock': 'Place lock toggled',
   'undo.importGpx': 'GPX import',
@@ -2309,6 +2329,11 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'system_notice.pager.counter': '{current} / {total}',
   'system_notice.pager.goto': 'Go to notice {n}',
   'system_notice.pager.position': 'Notice {current} of {total}',
+  'transport.addTransport': 'Add transport',
+  'transport.modalTitle.create': 'Add transport',
+  'transport.modalTitle.edit': 'Edit transport',
+  'transport.title': 'Transports',
+  'transport.addManual': 'Manual Transport',
 }
 
 export default en

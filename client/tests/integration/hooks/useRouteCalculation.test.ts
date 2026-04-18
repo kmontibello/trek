@@ -2,6 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useRouteCalculation } from '../../../src/hooks/useRouteCalculation';
 import { useSettingsStore } from '../../../src/store/settingsStore';
+import { useTripStore } from '../../../src/store/tripStore';
 import { buildAssignment, buildPlace } from '../../helpers/factories';
 import type { TripStoreState } from '../../../src/store/tripStore';
 import type { RouteSegment } from '../../../src/types';
@@ -17,6 +18,10 @@ vi.mock('../../../src/components/Map/RouteCalculator', () => ({
 const { calculateSegments } = await import('../../../src/components/Map/RouteCalculator');
 
 function buildMockStore(assignments: Record<string, ReturnType<typeof buildAssignment>[]> = {}): Partial<TripStoreState> {
+  // Also populate the real Zustand store so updateRouteForDay (which reads from
+  // useTripStore.getState()) sees the same assignments as the hook's tripStore param.
+  // Reset reservations and days to empty so transport-split logic doesn't interfere.
+  useTripStore.setState({ assignments, reservations: [], days: [] } as any);
   return { assignments } as Partial<TripStoreState>;
 }
 
@@ -35,6 +40,8 @@ describe('useRouteCalculation', () => {
     vi.clearAllMocks();
     // Default: route_calculation disabled
     useSettingsStore.setState({ settings: { route_calculation: false } as any });
+    // Reset trip store assignments so each test starts clean
+    useTripStore.setState({ assignments: {} } as any);
     (calculateSegments as ReturnType<typeof vi.fn>).mockResolvedValue(MOCK_SEGMENTS);
   });
 
@@ -71,9 +78,9 @@ describe('useRouteCalculation', () => {
     );
 
     await act(async () => {});
+    // route is an array of segments; no transport → single segment with all places
     expect(result.current.route).toEqual([
-      [p1.lat, p1.lng],
-      [p2.lat, p2.lng],
+      [[p1.lat, p1.lng], [p2.lat, p2.lng]],
     ]);
   });
 
@@ -133,8 +140,7 @@ describe('useRouteCalculation', () => {
 
     // After sort: a2 (order_index=0) first, then a1 (order_index=1)
     expect(result.current.route).toEqual([
-      [p2.lat, p2.lng],
-      [p1.lat, p1.lng],
+      [[p2.lat, p2.lng], [p1.lat, p1.lng]],
     ]);
   });
 
@@ -266,7 +272,7 @@ describe('useRouteCalculation', () => {
     expect(result.current.setRouteInfo).toBeTypeOf('function');
   });
 
-  it('FE-HOOK-ROUTE-013: hook uses tripStoreRef — late store updates reflected correctly', async () => {
+  it('FE-HOOK-ROUTE-013: route recalculates when assignments change via store update', async () => {
     useSettingsStore.setState({ settings: { route_calculation: true } as any });
 
     const p1 = buildPlace({ lat: 10, lng: 10 });
@@ -283,14 +289,13 @@ describe('useRouteCalculation', () => {
     await act(async () => {});
 
     expect(result.current.route).toEqual([
-      [p1.lat, p1.lng],
-      [p2.lat, p2.lng],
+      [[p1.lat, p1.lng], [p2.lat, p2.lng]],
     ]);
 
-    // Now add a third place
+    // Now add a third place — update both the local store object and the Zustand store
     const p3 = buildPlace({ lat: 30, lng: 30 });
     const a3 = buildAssignment({ day_id: 5, order_index: 2, place: p3 });
-    storeData = buildMockStore({ '5': [a1, a2, a3] });
+    storeData = buildMockStore({ '5': [a1, a2, a3] }); // also calls useTripStore.setState
 
     await act(async () => {
       rerender();
@@ -299,9 +304,7 @@ describe('useRouteCalculation', () => {
     await act(async () => {});
 
     expect(result.current.route).toEqual([
-      [p1.lat, p1.lng],
-      [p2.lat, p2.lng],
-      [p3.lat, p3.lng],
+      [[p1.lat, p1.lng], [p2.lat, p2.lng], [p3.lat, p3.lng]],
     ]);
   });
 });

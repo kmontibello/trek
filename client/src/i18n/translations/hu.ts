@@ -10,6 +10,9 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   'common.add': 'Hozzáadás',
   'common.loading': 'Betöltés...',
   'common.import': 'Importálás',
+  'common.select': 'Kiválaszt',
+  'common.selectAll': 'Mindet kiválaszt',
+  'common.deselectAll': 'Összes kijelölés megszüntetése',
   'common.error': 'Hiba',
   'common.unknownError': 'Ismeretlen hiba',
   'common.tooManyAttempts': 'Túl sok próbálkozás. Kérjük, próbálja újra később.',
@@ -865,6 +868,7 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
 
   // Utazástervező
   'trip.tabs.plan': 'Terv',
+  'trip.tabs.transports': 'Közlekedés',
   'trip.tabs.reservations': 'Foglalások',
   'trip.tabs.reservationsShort': 'Foglalás',
   'trip.tabs.packing': 'Csomagolási lista',
@@ -886,6 +890,8 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   'trip.toast.reservationAdded': 'Foglalás hozzáadva',
   'trip.toast.deleted': 'Törölve',
   'trip.confirm.deletePlace': 'Biztosan törölni szeretnéd ezt a helyet?',
+  'trip.confirm.deletePlaces': '{count} helyet töröl?',
+  'trip.toast.placesDeleted': '{count} hely törölve',
   'trip.loadingPhotos': 'Helyek fotóinak betöltése...',
 
   // Napi terv oldalsáv
@@ -931,6 +937,17 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   'places.importFileError': 'Importálás sikertelen',
   'places.importAllSkipped': 'Minden hely már szerepel az utazásban.',
   'places.gpxImported': '{count} hely importálva GPX-ből',
+  'places.gpxImportTypes': 'Mit szeretnél importálni?',
+  'places.gpxImportWaypoints': 'Útpontok',
+  'places.gpxImportRoutes': 'Útvonalak',
+  'places.gpxImportTracks': 'Nyomvonalak (útvonalgeometriával)',
+  'places.gpxImportNoneSelected': 'Válassz legalább egy típust az importáláshoz.',
+  'places.kmlImportTypes': 'Mit szeretnél importálni?',
+  'places.kmlImportPoints': 'Pontok (Placemarks)',
+  'places.kmlImportPaths': 'Útvonalak (LineStrings)',
+  'places.kmlImportNoneSelected': 'Válassz legalább egy típust.',
+  'places.selectionCount': '{count} kiválasztva',
+  'places.deleteSelected': 'Kijelöltek törlése',
   'places.kmlKmzImported': '{count} hely importálva KMZ/KML-ből',
   'places.urlResolved': 'Hely importálva URL-ből',
   'places.importList': 'Lista importálás',
@@ -947,6 +964,7 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   'places.assignToDay': 'Melyik naphoz adod?',
   'places.all': 'Összes',
   'places.unplanned': 'Nem tervezett',
+  'places.filterTracks': 'Nyomvonalak',
   'places.search': 'Helyek keresése...',
   'places.allCategories': 'Összes kategória',
   'places.categoriesSelected': 'kategória',
@@ -1118,6 +1136,7 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   'reservations.span.end': 'Vége',
   'reservations.span.ongoing': 'Folyamatban',
   'reservations.validation.endBeforeStart': 'A befejezés dátuma/időpontja a kezdés utáni kell legyen',
+  'reservations.addBooking': 'Foglalás hozzáadása',
 
   // Költségvetés
   'budget.title': 'Költségvetés',
@@ -1716,6 +1735,7 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   'undo.reorder': 'Helyek átrendezve',
   'undo.optimize': 'Útvonal optimalizálva',
   'undo.deletePlace': 'Hely törölve',
+  'undo.deletePlaces': 'Helyek törölve',
   'undo.moveDay': 'Hely áthelyezve másik napra',
   'undo.lock': 'Hely zárolása váltva',
   'undo.importGpx': 'GPX importálás',
@@ -2268,6 +2288,11 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   // System notices — personal thank you
   'system_notice.v3_thankyou.title': 'Egy személyes gondolat tőlem',
   'system_notice.v3_thankyou.body': 'Mielőtt továbbmennél — szeretnék egy pillanatra megállni.\n\nA TREK egy hobbiprojektként indult, amit a saját utazásaimhoz építettem. Sosem gondoltam volna, hogy valami olyanná nő, amire 4000-en bízzátok a kalandjaitok tervezését. Minden csillagot, minden issue-t, minden funkciókérést — mindet elolvasom, és ezek tartanak életben a késő éjszakákon a teljes állás és az egyetem között.\n\nSzeretnétek, ha tudnátok: a TREK mindig nyílt forráskódú marad, mindig self-hosted, mindig a tiétek. Nincs nyomkövetés, nincs előfizetés, nincsenek rejtett feltételek. Csak egy eszköz, amit valaki épített, aki ugyanúgy szereti az utazást, mint ti.\n\nKülönleges köszönet [jubnl](https://github.com/jubnl)-nek — hihetetlen társsá váltál. A 3.0 nagyszerűségének nagy része a te kézjegyedet viseli. Köszönöm, hogy hittél ebben a projektben, amikor még nyers volt.\n\nÉs mindannyiótoknak, akik hibát jelentettetek, szöveget fordítottatok, megosztottátok a TREK-et egy baráttal, vagy egyszerűen csak egy utazást terveztetek vele — **köszönöm**. Ti vagytok az ok, amiért ez létezik.\n\nSok további közös kalandért.\n\n— Maurice\n\n---\n\n[Csatlakozz a közösséghez a Discordon](https://discord.gg/7Q6M6jDwzf)\n\nHa a TREK jobbá teszi az utazásaidat, egy [kis kávé](https://ko-fi.com/mauriceboe) mindig segít, hogy égve maradjanak a fények.',
+  'transport.addTransport': 'Add transport',
+  'transport.modalTitle.create': 'Add transport',
+  'transport.modalTitle.edit': 'Edit transport',
+  'transport.title': 'Közlekedés',
+  'transport.addManual': 'Kézi közlekedés',
 }
 
 export default hu

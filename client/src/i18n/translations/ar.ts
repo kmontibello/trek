@@ -14,6 +14,9 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   'common.add': 'إضافة',
   'common.loading': 'جارٍ التحميل...',
   'common.import': 'استيراد',
+  'common.select': 'تحديد',
+  'common.selectAll': 'تحديد الكل',
+  'common.deselectAll': 'إلغاء تحديد الكل',
   'common.error': 'خطأ',
   'common.unknownError': 'خطأ غير معروف',
   'common.tooManyAttempts': 'محاولات كثيرة جدًا. يرجى المحاولة لاحقًا.',
@@ -867,6 +870,7 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
 
   // Trip Planner
   'trip.tabs.plan': 'الخطة',
+  'trip.tabs.transports': 'المواصلات',
   'trip.tabs.reservations': 'الحجوزات',
   'trip.tabs.reservationsShort': 'حجز',
   'trip.tabs.packing': 'قائمة التجهيز',
@@ -889,6 +893,8 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   'trip.toast.reservationAdded': 'تمت إضافة الحجز',
   'trip.toast.deleted': 'تم الحذف',
   'trip.confirm.deletePlace': 'هل تريد حذف هذا المكان؟',
+  'trip.confirm.deletePlaces': 'حذف {count} أماكن؟',
+  'trip.toast.placesDeleted': 'تم حذف {count} أماكن',
 
   // Day Plan Sidebar
   'dayplan.emptyDay': 'لا توجد أماكن مخططة لهذا اليوم',
@@ -933,6 +939,17 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   'places.importFileError': 'فشل الاستيراد',
   'places.importAllSkipped': 'جميع الأماكن موجودة بالفعل في الرحلة.',
   'places.gpxImported': 'تم استيراد {count} مكان من GPX',
+  'places.gpxImportTypes': 'ما الذي تريد استيراده؟',
+  'places.gpxImportWaypoints': 'نقاط الطريق',
+  'places.gpxImportRoutes': 'المسارات',
+  'places.gpxImportTracks': 'المسارات (مع هندسة الطريق)',
+  'places.gpxImportNoneSelected': 'اختر نوعاً واحداً على الأقل للاستيراد.',
+  'places.kmlImportTypes': 'ما الذي تريد استيراده؟',
+  'places.kmlImportPoints': 'نقاط (Placemarks)',
+  'places.kmlImportPaths': 'مسارات (LineStrings)',
+  'places.kmlImportNoneSelected': 'اختر نوعًا واحدًا على الأقل.',
+  'places.selectionCount': '{count} محدد',
+  'places.deleteSelected': 'حذف المحدد',
   'places.kmlKmzImported': 'تم استيراد {count} مكان من KMZ/KML',
   'places.urlResolved': 'تم استيراد المكان من الرابط',
   'places.importList': 'استيراد قائمة',
@@ -949,6 +966,7 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   'places.assignToDay': 'إلى أي يوم تريد الإضافة؟',
   'places.all': 'الكل',
   'places.unplanned': 'غير مخطط',
+  'places.filterTracks': 'المسارات',
   'places.search': 'ابحث عن أماكن...',
   'places.allCategories': 'كل الفئات',
   'places.categoriesSelected': 'فئات',
@@ -1121,6 +1139,7 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   'reservations.span.end': 'النهاية',
   'reservations.span.ongoing': 'جارٍ',
   'reservations.validation.endBeforeStart': 'يجب أن يكون تاريخ/وقت الانتهاء بعد تاريخ/وقت البدء',
+  'reservations.addBooking': 'إضافة حجز',
 
   // Budget
   'budget.title': 'الميزانية',
@@ -1773,6 +1792,7 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   'undo.reorder': 'تمت إعادة ترتيب الأماكن',
   'undo.optimize': 'تم تحسين المسار',
   'undo.deletePlace': 'تم حذف المكان',
+  'undo.deletePlaces': 'تم حذف الأماكن',
   'undo.moveDay': 'تم نقل المكان إلى يوم آخر',
   'undo.lock': 'تم تبديل قفل المكان',
   'undo.importGpx': 'استيراد GPX',
@@ -2064,6 +2084,11 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   // System notices — personal thank you
   'system_notice.v3_thankyou.title': 'كلمة شخصية مني',
   'system_notice.v3_thankyou.body': 'قبل أن تمضي — أريد أن أتوقف لحظة.\n\nبدأ TREK كمشروع جانبي بنيته لرحلاتي الخاصة. لم أتخيل يومًا أنه سيكبر ليصبح شيئًا يعتمد عليه 4,000 منكم لتخطيط مغامراتهم. كل نجمة، كل مشكلة، كل طلب ميزة — أقرأها جميعًا، وهي ما يبقيني مستمرًا في الليالي المتأخرة بين عمل بدوام كامل والجامعة.\n\nأريدكم أن تعرفوا: TREK سيبقى دائمًا مفتوح المصدر، دائمًا مستضافًا ذاتيًا، دائمًا ملككم. لا تتبع، لا اشتراكات، لا شروط خفية. مجرد أداة بناها شخص يحب السفر بقدر ما تحبونه.\n\nشكر خاص لـ [jubnl](https://github.com/jubnl) — لقد أصبحت متعاونًا رائعًا. الكثير مما يجعل الإصدار 3.0 عظيمًا يحمل بصماتك. شكرًا لإيمانك بهذا المشروع عندما كان لا يزال في بداياته.\n\nولكل واحد منكم ممن أبلغ عن خطأ، أو ترجم نصًا، أو شارك TREK مع صديق، أو ببساطة استخدمه لتخطيط رحلة — **شكرًا لكم**. أنتم السبب في وجود هذا.\n\nإلى المزيد من المغامرات معًا.\n\n— Maurice\n\n---\n\n[انضم إلى المجتمع على Discord](https://discord.gg/7Q6M6jDwzf)\n\nإذا جعل TREK رحلاتك أفضل، [فنجان قهوة صغير](https://ko-fi.com/mauriceboe) يبقي الأضواء مشتعلة.',
+  'transport.addTransport': 'Add transport',
+  'transport.modalTitle.create': 'Add transport',
+  'transport.modalTitle.edit': 'Edit transport',
+  'transport.title': 'المواصلات',
+  'transport.addManual': 'نقل يدوي',
 }
 
 export default ar

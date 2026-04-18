@@ -10,6 +10,9 @@ const nl: Record<string, string> = {
   'common.add': 'Toevoegen',
   'common.loading': 'Laden...',
   'common.import': 'Importeren',
+  'common.select': 'Selecteren',
+  'common.selectAll': 'Alles selecteren',
+  'common.deselectAll': 'Alles deselecteren',
   'common.error': 'Fout',
   'common.unknownError': 'Onbekende fout',
   'common.tooManyAttempts': 'Te veel pogingen. Probeer het later opnieuw.',
@@ -864,6 +867,7 @@ const nl: Record<string, string> = {
 
   // Trip Planner
   'trip.tabs.plan': 'Plan',
+  'trip.tabs.transports': 'Transport',
   'trip.tabs.reservations': 'Boekingen',
   'trip.tabs.reservationsShort': 'Boek',
   'trip.tabs.packing': 'Paklijst',
@@ -886,6 +890,8 @@ const nl: Record<string, string> = {
   'trip.toast.reservationAdded': 'Reservering toegevoegd',
   'trip.toast.deleted': 'Verwijderd',
   'trip.confirm.deletePlace': 'Weet je zeker dat je deze plaats wilt verwijderen?',
+  'trip.confirm.deletePlaces': '{count} plaatsen verwijderen?',
+  'trip.toast.placesDeleted': '{count} plaatsen verwijderd',
 
   // Day Plan Sidebar
   'dayplan.emptyDay': 'Geen plaatsen gepland voor deze dag',
@@ -930,6 +936,17 @@ const nl: Record<string, string> = {
   'places.importFileError': 'Importeren mislukt',
   'places.importAllSkipped': 'Alle plaatsen waren al in de reis.',
   'places.gpxImported': '{count} plaatsen geïmporteerd uit GPX',
+  'places.gpxImportTypes': 'Wat wil je importeren?',
+  'places.gpxImportWaypoints': 'Waypoints',
+  'places.gpxImportRoutes': 'Routes',
+  'places.gpxImportTracks': 'Tracks (met routegeometrie)',
+  'places.gpxImportNoneSelected': 'Selecteer minstens één type om te importeren.',
+  'places.kmlImportTypes': 'Wat wil je importeren?',
+  'places.kmlImportPoints': 'Punten (Placemarks)',
+  'places.kmlImportPaths': 'Paden (LineStrings)',
+  'places.kmlImportNoneSelected': 'Selecteer minstens één type.',
+  'places.selectionCount': '{count} geselecteerd',
+  'places.deleteSelected': 'Selectie verwijderen',
   'places.kmlKmzImported': '{count} plaatsen geïmporteerd uit KMZ/KML',
   'places.urlResolved': 'Plaats geïmporteerd van URL',
   'places.importList': 'Lijst importeren',
@@ -946,6 +963,7 @@ const nl: Record<string, string> = {
   'places.assignToDay': 'Aan welke dag toevoegen?',
   'places.all': 'Alle',
   'places.unplanned': 'Ongepland',
+  'places.filterTracks': 'Tracks',
   'places.search': 'Plaatsen zoeken...',
   'places.allCategories': 'Alle categorieën',
   'places.categoriesSelected': 'categorieën',
@@ -1117,6 +1135,7 @@ const nl: Record<string, string> = {
   'reservations.span.end': 'Einde',
   'reservations.span.ongoing': 'Lopend',
   'reservations.validation.endBeforeStart': 'Einddatum/-tijd moet na de startdatum/-tijd liggen',
+  'reservations.addBooking': 'Boeking toevoegen',
 
   // Budget
   'budget.title': 'Budget',
@@ -1718,6 +1737,7 @@ const nl: Record<string, string> = {
   'undo.reorder': 'Locaties hergeordend',
   'undo.optimize': 'Route geoptimaliseerd',
   'undo.deletePlace': 'Locatie verwijderd',
+  'undo.deletePlaces': 'Plaatsen verwijderd',
   'undo.moveDay': 'Locatie naar andere dag verplaatst',
   'undo.lock': 'Vergrendeling locatie gewijzigd',
   'undo.importGpx': 'GPX-import',
@@ -2267,6 +2287,11 @@ const nl: Record<string, string> = {
   // System notices — personal thank you
   'system_notice.v3_thankyou.title': 'Een persoonlijk woord van mij',
   'system_notice.v3_thankyou.body': 'Voordat je verdergaat — ik wil even stilstaan.\n\nTREK begon als een zijproject dat ik bouwde voor mijn eigen reizen. Ik had nooit gedacht dat het zou uitgroeien tot iets waar 4.000 van jullie op vertrouwen om avonturen te plannen. Elke ster, elke issue, elk functieverzoek — ik lees ze allemaal, en ze houden me op de been tijdens de late avonden tussen een fulltime baan en de universiteit.\n\nIk wil dat jullie weten: TREK zal altijd open source zijn, altijd self-hosted, altijd van jullie. Geen tracking, geen abonnementen, geen addertjes. Gewoon een tool gebouwd door iemand die net zo veel van reizen houdt als jullie.\n\nSpeciale dank aan [jubnl](https://github.com/jubnl) — je bent een ongelooflijke medewerker geworden. Zo veel van wat 3.0 geweldig maakt draagt jouw vingerafdruk. Bedankt dat je in dit project geloofde toen het nog ruw was.\n\nEn aan ieder van jullie die een bug meldde, een string vertaalde, TREK deelde met een vriend of het simpelweg gebruikte om een reis te plannen — **bedankt**. Jullie zijn de reden dat dit bestaat.\n\nOp nog vele avonturen samen.\n\n— Maurice\n\n---\n\n[Sluit je aan bij de community op Discord](https://discord.gg/7Q6M6jDwzf)\n\nAls TREK je reizen beter maakt, houdt een [klein kopje koffie](https://ko-fi.com/mauriceboe) altijd de lichten aan.',
+  'transport.addTransport': 'Add transport',
+  'transport.modalTitle.create': 'Add transport',
+  'transport.modalTitle.edit': 'Edit transport',
+  'transport.title': 'Transport',
+  'transport.addManual': 'Handmatig transport',
 }
 
 export default nl

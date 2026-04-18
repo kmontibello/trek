@@ -10,6 +10,9 @@ const zh: Record<string, string> = {
   'common.add': '添加',
   'common.loading': '加载中...',
   'common.import': '导入',
+  'common.select': '选择',
+  'common.selectAll': '全选',
+  'common.deselectAll': '取消全选',
   'common.error': '错误',
   'common.unknownError': '未知错误',
   'common.tooManyAttempts': '尝试次数过多，请稍后再试。',
@@ -864,6 +867,7 @@ const zh: Record<string, string> = {
 
   // Trip Planner
   'trip.tabs.plan': '计划',
+  'trip.tabs.transports': '交通',
   'trip.tabs.reservations': '预订',
   'trip.tabs.reservationsShort': '预订',
   'trip.tabs.packing': '行李清单',
@@ -886,6 +890,8 @@ const zh: Record<string, string> = {
   'trip.toast.reservationAdded': '预订已添加',
   'trip.toast.deleted': '已删除',
   'trip.confirm.deletePlace': '确定要删除这个地点吗？',
+  'trip.confirm.deletePlaces': '删除 {count} 个地点？',
+  'trip.toast.placesDeleted': '已删除 {count} 个地点',
 
   // Day Plan Sidebar
   'dayplan.emptyDay': '当天暂无计划',
@@ -930,6 +936,17 @@ const zh: Record<string, string> = {
   'places.importFileError': '导入失败',
   'places.importAllSkipped': '所有地点已在行程中。',
   'places.gpxImported': '已从 GPX 导入 {count} 个地点',
+  'places.gpxImportTypes': '要导入什么？',
+  'places.gpxImportWaypoints': '路点',
+  'places.gpxImportRoutes': '路线',
+  'places.gpxImportTracks': '轨迹（含路径几何）',
+  'places.gpxImportNoneSelected': '请至少选择一种导入类型。',
+  'places.kmlImportTypes': '要导入什么？',
+  'places.kmlImportPoints': '点（Placemarks）',
+  'places.kmlImportPaths': '路径（LineStrings）',
+  'places.kmlImportNoneSelected': '请至少选择一种类型。',
+  'places.selectionCount': '已选 {count} 项',
+  'places.deleteSelected': '删除所选',
   'places.kmlKmzImported': '已从 KMZ/KML 导入 {count} 个地点',
   'places.urlResolved': '已从 URL 导入地点',
   'places.importList': '列表导入',
@@ -946,6 +963,7 @@ const zh: Record<string, string> = {
   'places.assignToDay': '添加到哪一天？',
   'places.all': '全部',
   'places.unplanned': '未规划',
+  'places.filterTracks': '路线',
   'places.search': '搜索地点...',
   'places.allCategories': '所有分类',
   'places.categoriesSelected': '个分类',
@@ -1117,6 +1135,7 @@ const zh: Record<string, string> = {
   'reservations.span.end': '结束',
   'reservations.span.ongoing': '进行中',
   'reservations.validation.endBeforeStart': '结束日期/时间必须晚于开始日期/时间',
+  'reservations.addBooking': '添加预订',
 
   // Budget
   'budget.title': '预算',
@@ -1715,6 +1734,7 @@ const zh: Record<string, string> = {
   'undo.reorder': '地点已重新排序',
   'undo.optimize': '路线已优化',
   'undo.deletePlace': '地点已删除',
+  'undo.deletePlaces': '地点已删除',
   'undo.moveDay': '地点已移至另一天',
   'undo.lock': '地点锁定已切换',
   'undo.importGpx': 'GPX 导入',
@@ -2267,6 +2287,11 @@ const zh: Record<string, string> = {
   // System notices — personal thank you
   'system_notice.v3_thankyou.title': '来自我的一封私人信',
   'system_notice.v3_thankyou.body': '在你继续之前——我想停下来说几句。\n\nTREK 最初只是我为自己的旅行而做的一个业余项目。我从未想过它会成长为 4,000 人信赖的冒险规划工具。每一颗星标、每一个 issue、每一个功能请求——我都会读，它们在全职工作和大学学业之间的深夜里支撑着我继续前行。\n\n我想让你们知道：TREK 将永远开源，永远可自托管，永远属于你们。没有追踪，没有订阅，没有任何附加条件。只是一个热爱旅行的人为同样热爱旅行的你们打造的工具。\n\n特别感谢 [jubnl](https://github.com/jubnl)——你已经成为一位不可思议的合作者。3.0 版本中许多精彩之处都留下了你的印记。感谢你在这个项目还很粗糙的时候就选择了相信它。\n\n也感谢你们每一位——报告了 bug、翻译了文本、向朋友分享了 TREK，或者只是用它规划了一次旅行——**谢谢你们**。你们是这一切存在的原因。\n\n愿我们一起踏上更多的冒险旅程。\n\n— Maurice\n\n---\n\n[加入 Discord 社区](https://discord.gg/7Q6M6jDwzf)\n\n如果 TREK 让你的旅行更美好，一杯[小小的咖啡](https://ko-fi.com/mauriceboe)能让这盏灯一直亮着。',
+  'transport.addTransport': 'Add transport',
+  'transport.modalTitle.create': 'Add transport',
+  'transport.modalTitle.edit': 'Edit transport',
+  'transport.title': '交通',
+  'transport.addManual': '手动添加交通',
 }
 
 export default zh

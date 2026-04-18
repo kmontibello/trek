@@ -10,6 +10,9 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   'common.add': 'Přidat',
   'common.loading': 'Načítání...',
   'common.import': 'Importovat',
+  'common.select': 'Vybrat',
+  'common.selectAll': 'Vybrat vše',
+  'common.deselectAll': 'Zrušit výběr všeho',
   'common.error': 'Chyba',
   'common.unknownError': 'Neznámá chyba',
   'common.tooManyAttempts': 'Příliš mnoho pokusů. Zkuste to prosím znovu.',
@@ -865,6 +868,7 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
 
   // Plánovač cesty (Trip Planner)
   'trip.tabs.plan': 'Plán',
+  'trip.tabs.transports': 'Doprava',
   'trip.tabs.reservations': 'Rezervace',
   'trip.tabs.reservationsShort': 'Rez.',
   'trip.tabs.packing': 'Seznam věcí',
@@ -887,6 +891,8 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   'trip.toast.reservationAdded': 'Rezervace přidána',
   'trip.toast.deleted': 'Smazáno',
   'trip.confirm.deletePlace': 'Opravdu chcete toto místo smazat?',
+  'trip.confirm.deletePlaces': 'Smazat {count} míst?',
+  'trip.toast.placesDeleted': '{count} míst smazáno',
 
   // Denní plán (Day Plan)
   'dayplan.emptyDay': 'Na tento den nejsou naplánována žádná místa',
@@ -931,6 +937,17 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   'places.importFileError': 'Import se nezdařil',
   'places.importAllSkipped': 'Všechna místa již byla v cestě.',
   'places.gpxImported': '{count} míst importováno z GPX',
+  'places.gpxImportTypes': 'Co chcete importovat?',
+  'places.gpxImportWaypoints': 'Trasové body',
+  'places.gpxImportRoutes': 'Trasy',
+  'places.gpxImportTracks': 'Trasy GPS (s geometrií)',
+  'places.gpxImportNoneSelected': 'Vyberte alespoň jeden typ k importu.',
+  'places.kmlImportTypes': 'Co chcete importovat?',
+  'places.kmlImportPoints': 'Body (Placemarks)',
+  'places.kmlImportPaths': 'Trasy (LineStrings)',
+  'places.kmlImportNoneSelected': 'Vyberte alespoň jeden typ.',
+  'places.selectionCount': '{count} vybráno',
+  'places.deleteSelected': 'Smazat vybrané',
   'places.kmlKmzImported': 'Importováno {count} míst z KMZ/KML',
   'places.urlResolved': 'Místo importováno z URL',
   'places.importList': 'Import seznamu',
@@ -947,6 +964,7 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   'places.assignToDay': 'Přidat do kterého dne?',
   'places.all': 'Vše',
   'places.unplanned': 'Nezařazené',
+  'places.filterTracks': 'Trasy',
   'places.search': 'Hledat místa...',
   'places.allCategories': 'Všechny kategorie',
   'places.categoriesSelected': 'kategorií',
@@ -1119,6 +1137,7 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   'reservations.span.end': 'Konec',
   'reservations.span.ongoing': 'Probíhá',
   'reservations.validation.endBeforeStart': 'Datum/čas konce musí být po datu/čase začátku',
+  'reservations.addBooking': 'Přidat rezervaci',
 
   // Rozpočet (Budget)
   'budget.title': 'Rozpočet',
@@ -1717,6 +1736,7 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   'undo.reorder': 'Místa přeseřazena',
   'undo.optimize': 'Trasa optimalizována',
   'undo.deletePlace': 'Místo smazáno',
+  'undo.deletePlaces': 'Místa smazána',
   'undo.moveDay': 'Místo přesunuto na jiný den',
   'undo.lock': 'Zámek místa přepnut',
   'undo.importGpx': 'Import GPX',
@@ -2271,6 +2291,11 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   // System notices — personal thank you
   'system_notice.v3_thankyou.title': 'Osobní slovo ode mě',
   'system_notice.v3_thankyou.body': 'Než budete pokračovat — chci se na chvíli zastavit.\n\nTREK začal jako vedlejší projekt, který jsem vytvořil pro své vlastní cesty. Nikdy jsem si nepředstavoval, že vyroste v něco, čemu 4 000 z vás důvěřuje při plánování svých dobrodružství. Každou hvězdičku, každý issue, každý požadavek na funkci — všechny čtu a právě ony mě drží při životě během pozdních nocí mezi prací na plný úvazek a univerzitou.\n\nChci, abyste věděli: TREK bude vždy open source, vždy self-hosted, vždy váš. Žádné sledování, žádná předplatná, žádné háčky. Jen nástroj vytvořený někým, kdo miluje cestování stejně jako vy.\n\nZvláštní poděkování patří [jubnl](https://github.com/jubnl) — stal ses neuvěřitelným spolupracovníkem. Tolik z toho, co dělá verzi 3.0 skvělou, nese tvůj rukopis. Děkuji, že jsi věřil tomuto projektu, když byl ještě v plenkách.\n\nA každému z vás, kdo nahlásil chybu, přeložil řetězec, sdílel TREK s přítelem nebo ho jednoduše použil k plánování cesty — **děkuji**. Vy jste důvod, proč tohle existuje.\n\nNa mnoho dalších dobrodružství společně.\n\n— Maurice\n\n---\n\n[Přidej se ke komunitě na Discordu](https://discord.gg/7Q6M6jDwzf)\n\nPokud ti TREK zlepšuje cestování, [malá káva](https://ko-fi.com/mauriceboe) vždy pomůže udržet světla rozsvícená.',
+  'transport.addTransport': 'Add transport',
+  'transport.modalTitle.create': 'Add transport',
+  'transport.modalTitle.edit': 'Edit transport',
+  'transport.title': 'Doprava',
+  'transport.addManual': 'Ruční doprava',
 }
 
 export default cs

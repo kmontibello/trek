@@ -10,6 +10,9 @@ const id: Record<string, string | { name: string; category: string }[]> = {
   'common.add': 'Tambah',
   'common.loading': 'Memuat...',
   'common.import': 'Impor',
+  'common.select': 'Pilih',
+  'common.selectAll': 'Pilih semua',
+  'common.deselectAll': 'Batalkan semua pilihan',
   'common.error': 'Kesalahan',
   'common.unknownError': 'Kesalahan tidak diketahui',
   'common.tooManyAttempts': 'Terlalu banyak percobaan. Coba lagi nanti.',
@@ -925,6 +928,7 @@ const id: Record<string, string | { name: string; category: string }[]> = {
 
   // Trip Planner
   'trip.tabs.plan': 'Rencana',
+  'trip.tabs.transports': 'Transportasi',
   'trip.tabs.reservations': 'Pemesanan',
   'trip.tabs.reservationsShort': 'Pesan',
   'trip.tabs.packing': 'Daftar Perlengkapan',
@@ -947,6 +951,8 @@ const id: Record<string, string | { name: string; category: string }[]> = {
   'trip.toast.reservationAdded': 'Reservasi ditambahkan',
   'trip.toast.deleted': 'Dihapus',
   'trip.confirm.deletePlace': 'Apakah kamu yakin ingin menghapus tempat ini?',
+  'trip.confirm.deletePlaces': 'Hapus {count} tempat?',
+  'trip.toast.placesDeleted': '{count} tempat dihapus',
 
   // Day Plan Sidebar
   'dayplan.emptyDay': 'Belum ada tempat yang direncanakan untuk hari ini',
@@ -991,6 +997,17 @@ const id: Record<string, string | { name: string; category: string }[]> = {
   'places.importFileError': 'Impor gagal',
   'places.importAllSkipped': 'Semua tempat sudah ada di perjalanan.',
   'places.gpxImported': '{count} tempat diimpor dari GPX',
+  'places.gpxImportTypes': 'Apa yang ingin diimpor?',
+  'places.gpxImportWaypoints': 'Titik jalan',
+  'places.gpxImportRoutes': 'Rute',
+  'places.gpxImportTracks': 'Trek (dengan geometri jalur)',
+  'places.gpxImportNoneSelected': 'Pilih setidaknya satu jenis untuk diimpor.',
+  'places.kmlImportTypes': 'Apa yang ingin diimpor?',
+  'places.kmlImportPoints': 'Titik (Placemarks)',
+  'places.kmlImportPaths': 'Jalur (LineStrings)',
+  'places.kmlImportNoneSelected': 'Pilih setidaknya satu jenis.',
+  'places.selectionCount': '{count} dipilih',
+  'places.deleteSelected': 'Hapus yang dipilih',
   'places.kmlKmzImported': '{count} tempat diimpor dari KMZ/KML',
   'places.urlResolved': 'Tempat diimpor dari URL',
   'places.importList': 'Impor Daftar',
@@ -1007,6 +1024,7 @@ const id: Record<string, string | { name: string; category: string }[]> = {
   'places.assignToDay': 'Tambah ke hari mana?',
   'places.all': 'Semua',
   'places.unplanned': 'Belum direncanakan',
+  'places.filterTracks': 'Trek',
   'places.search': 'Cari tempat...',
   'places.allCategories': 'Semua Kategori',
   'places.categoriesSelected': 'kategori',
@@ -1178,6 +1196,7 @@ const id: Record<string, string | { name: string; category: string }[]> = {
   'reservations.span.end': 'Selesai',
   'reservations.span.ongoing': 'Berlangsung',
   'reservations.validation.endBeforeStart': 'Tanggal/waktu selesai harus setelah tanggal/waktu mulai',
+  'reservations.addBooking': 'Tambah pemesanan',
 
   // Budget
   'budget.title': 'Anggaran',
@@ -1791,6 +1810,7 @@ const id: Record<string, string | { name: string; category: string }[]> = {
   'undo.reorder': 'Tempat diurutkan ulang',
   'undo.optimize': 'Rute dioptimalkan',
   'undo.deletePlace': 'Tempat dihapus',
+  'undo.deletePlaces': 'Tempat dihapus',
   'undo.moveDay': 'Tempat dipindah ke hari lain',
   'undo.lock': 'Kunci tempat diubah',
   'undo.importGpx': 'Impor GPX',
@@ -2309,6 +2329,11 @@ const id: Record<string, string | { name: string; category: string }[]> = {
   // System notices — personal thank you
   'system_notice.v3_thankyou.title': 'Catatan pribadi dari saya',
   'system_notice.v3_thankyou.body': 'Sebelum kamu lanjut — saya ingin berhenti sejenak.\n\nTREK dimulai sebagai proyek sampingan yang saya buat untuk perjalanan saya sendiri. Saya tidak pernah membayangkan ia akan tumbuh menjadi sesuatu yang dipercaya oleh 4.000 dari kalian untuk merencanakan petualangan. Setiap bintang, setiap issue, setiap permintaan fitur — saya membaca semuanya, dan itulah yang membuat saya terus bertahan di malam-malam larut antara pekerjaan penuh waktu dan kuliah.\n\nSaya ingin kalian tahu: TREK akan selalu open source, selalu self-hosted, selalu milik kalian. Tanpa pelacakan, tanpa langganan, tanpa syarat tersembunyi. Hanya sebuah alat yang dibuat oleh seseorang yang mencintai traveling sama seperti kalian.\n\nTerima kasih khusus untuk [jubnl](https://github.com/jubnl) — kamu telah menjadi kolaborator yang luar biasa. Begitu banyak hal yang membuat versi 3.0 hebat memiliki jejakmu. Terima kasih telah percaya pada proyek ini ketika masih kasar.\n\nDan untuk setiap dari kalian yang melaporkan bug, menerjemahkan string, membagikan TREK kepada teman, atau sekadar menggunakannya untuk merencanakan perjalanan — **terima kasih**. Kalianlah alasan semua ini ada.\n\nUntuk lebih banyak petualangan bersama.\n\n— Maurice\n\n---\n\n[Bergabunglah dengan komunitas di Discord](https://discord.gg/7Q6M6jDwzf)\n\nJika TREK membuat perjalananmu lebih baik, [secangkir kopi kecil](https://ko-fi.com/mauriceboe) selalu membantu menjaga lampu tetap menyala.',
+  'transport.addTransport': 'Add transport',
+  'transport.modalTitle.create': 'Add transport',
+  'transport.modalTitle.edit': 'Edit transport',
+  'transport.title': 'Transportasi',
+  'transport.addManual': 'Transportasi Manual',
 };
 
 export default id;
