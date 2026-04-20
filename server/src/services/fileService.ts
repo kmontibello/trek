@@ -1,9 +1,8 @@
 import path from 'path';
 import fs from 'fs';
-import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../config';
 import { db, canAccessTrip } from '../db/database';
 import { consumeEphemeralToken } from './ephemeralTokens';
+import { verifyJwtAndLoadUser } from '../middleware/auth';
 import { TripFile } from '../types';
 
 // ---------------------------------------------------------------------------
@@ -12,7 +11,18 @@ import { TripFile } from '../types';
 
 export const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
 export const DEFAULT_ALLOWED_EXTENSIONS = 'jpg,jpeg,png,gif,webp,heic,pdf,doc,docx,xls,xlsx,txt,csv,pkpass';
-export const BLOCKED_EXTENSIONS = ['.svg', '.html', '.htm', '.xml'];
+// Single authoritative blocklist for every file-upload surface (main
+// file manager + collab attachments). When the admin setting
+// `allowed_file_types` is `*`, this list is still enforced so the
+// wildcard doesn't silently admit executables/scripts.
+export const BLOCKED_EXTENSIONS = [
+  // Server-rendered / scripted content that could XSS a viewer
+  '.svg', '.html', '.htm', '.xml', '.xhtml',
+  // Scripts
+  '.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.php', '.py', '.rb', '.pl',
+  // Executables
+  '.exe', '.bat', '.sh', '.cmd', '.msi', '.dll', '.com', '.vbs', '.ps1', '.app',
+];
 export const filesDir = path.join(__dirname, '../../uploads/files');
 
 // ---------------------------------------------------------------------------
@@ -68,12 +78,12 @@ export function authenticateDownload(bearerToken: string | undefined, queryToken
   }
 
   if (bearerToken) {
-    try {
-      const decoded = jwt.verify(bearerToken, JWT_SECRET, { algorithms: ['HS256'] }) as { id: number };
-      return { userId: decoded.id };
-    } catch {
-      return { error: 'Invalid or expired token', status: 401 };
-    }
+    // Use the shared helper so the password_version gate applies here too;
+    // previously this bypassed the check and stolen download tokens stayed
+    // valid across a password reset.
+    const user = verifyJwtAndLoadUser(bearerToken);
+    if (!user) return { error: 'Invalid or expired token', status: 401 };
+    return { userId: user.id };
   }
 
   const uid = consumeEphemeralToken(queryToken!, 'download');
@@ -193,22 +203,20 @@ export function restoreFile(id: string | number) {
   return formatFile(restored);
 }
 
-export function permanentDeleteFile(file: TripFile) {
+export async function permanentDeleteFile(file: TripFile): Promise<void> {
   const { resolved } = resolveFilePath(file.filename);
-  if (fs.existsSync(resolved)) {
-    try { fs.unlinkSync(resolved); } catch (e) { console.error('Error deleting file:', e); }
-  }
+  // `force: true` swallows ENOENT, removing the prior existsSync+unlink
+  // double-call that blocked the event loop twice per deletion.
+  await fs.promises.rm(resolved, { force: true }).catch((e) => console.error('Error deleting file:', e));
   db.prepare('DELETE FROM trip_files WHERE id = ?').run(file.id);
 }
 
-export function emptyTrash(tripId: string | number): number {
+export async function emptyTrash(tripId: string | number): Promise<number> {
   const trashed = db.prepare('SELECT * FROM trip_files WHERE trip_id = ? AND deleted_at IS NOT NULL').all(tripId) as TripFile[];
-  for (const file of trashed) {
+  await Promise.all(trashed.map(async (file) => {
     const { resolved } = resolveFilePath(file.filename);
-    if (fs.existsSync(resolved)) {
-      try { fs.unlinkSync(resolved); } catch (e) { console.error('Error deleting file:', e); }
-    }
-  }
+    await fs.promises.rm(resolved, { force: true }).catch((e) => console.error('Error deleting file:', e));
+  }));
   db.prepare('DELETE FROM trip_files WHERE trip_id = ? AND deleted_at IS NOT NULL').run(tripId);
   return trashed.length;
 }

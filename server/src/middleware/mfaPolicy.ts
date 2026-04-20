@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { db } from '../db/database';
 import { JWT_SECRET } from '../config';
+import { extractToken } from './auth';
+import { DEMO_EMAILS } from '../services/demo';
 
 /** Paths that never require MFA (public or pre-auth). */
 export function isPublicApiPath(method: string, pathNoQuery: string): boolean {
@@ -42,8 +44,11 @@ export function enforceGlobalMfaPolicy(req: Request, res: Response, next: NextFu
     return;
   }
 
-  const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')[1];
+  // Accept both the httpOnly session cookie (regular SPA users) and the
+  // Authorization header (MCP / API clients). Previously this only looked
+  // at the header so every normal cookie-authenticated session sailed
+  // past `require_mfa` unchecked.
+  const token = extractToken(req);
   if (!token) {
     next();
     return;
@@ -66,7 +71,7 @@ export function enforceGlobalMfaPolicy(req: Request, res: Response, next: NextFu
 
   if (process.env.DEMO_MODE === 'true') {
     const demo = db.prepare('SELECT email FROM users WHERE id = ?').get(userId) as { email: string } | undefined;
-    if (demo?.email === 'demo@trek.app' || demo?.email === 'demo@nomad.app') {
+    if (demo?.email && DEMO_EMAILS.has(demo.email)) {
       next();
       return;
     }

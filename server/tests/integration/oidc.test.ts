@@ -44,6 +44,11 @@ vi.mock('../../src/services/oidcService', async (importOriginal) => {
     discover: vi.fn(),
     exchangeCodeForToken: vi.fn(),
     getUserInfo: vi.fn(),
+    // Bypass real JWKS fetch + signature verification in tests. Callers
+    // that exercise the security of verifyIdToken should unit-test the
+    // function directly instead; integration tests here focus on the
+    // callback flow, not the crypto.
+    verifyIdToken: vi.fn(),
   };
 });
 
@@ -58,6 +63,7 @@ import * as oidcService from '../../src/services/oidcService';
 const mockDiscover = vi.mocked(oidcService.discover);
 const mockExchangeCode = vi.mocked(oidcService.exchangeCodeForToken);
 const mockGetUserInfo = vi.mocked(oidcService.getUserInfo);
+const mockVerifyIdToken = vi.mocked(oidcService.verifyIdToken);
 
 const MOCK_DISCOVERY_DOC = {
   authorization_endpoint: 'https://oidc.example.com/auth',
@@ -142,9 +148,11 @@ describe('GET /api/auth/oidc/callback', () => {
     mockDiscover.mockResolvedValueOnce(MOCK_DISCOVERY_DOC);
     mockExchangeCode.mockResolvedValueOnce({
       access_token: 'test-access-token',
+      id_token: 'fake.id.token',
       _ok: true,
       _status: 200,
     });
+    mockVerifyIdToken.mockResolvedValueOnce({ ok: true, claims: { sub: 'sub-alice-123' } });
     mockGetUserInfo.mockResolvedValueOnce({
       sub: 'sub-alice-123',
       email: 'alice@example.com',
@@ -162,7 +170,8 @@ describe('GET /api/auth/oidc/callback', () => {
 
   it('OIDC-005: new user gets created when registration is open', async () => {
     mockDiscover.mockResolvedValueOnce(MOCK_DISCOVERY_DOC);
-    mockExchangeCode.mockResolvedValueOnce({ access_token: 'new-token', _ok: true, _status: 200 });
+    mockExchangeCode.mockResolvedValueOnce({ access_token: 'new-token', id_token: 'fake.id.token', _ok: true, _status: 200 });
+    mockVerifyIdToken.mockResolvedValueOnce({ ok: true, claims: { sub: 'sub-newuser-999' } });
     mockGetUserInfo.mockResolvedValueOnce({
       sub: 'sub-newuser-999',
       email: 'newuser@example.com',
@@ -221,7 +230,8 @@ describe('GET /api/auth/oidc/callback', () => {
     testDb.prepare("INSERT OR REPLACE INTO app_settings (key, value) VALUES ('allow_registration', 'false')").run();
 
     mockDiscover.mockResolvedValueOnce(MOCK_DISCOVERY_DOC);
-    mockExchangeCode.mockResolvedValueOnce({ access_token: 'tok', _ok: true, _status: 200 });
+    mockExchangeCode.mockResolvedValueOnce({ access_token: 'tok', id_token: 'fake.id.token', _ok: true, _status: 200 });
+    mockVerifyIdToken.mockResolvedValueOnce({ ok: true, claims: { sub: 'sub-blocked-user' } });
     mockGetUserInfo.mockResolvedValueOnce({
       sub: 'sub-blocked-user',
       email: 'blocked@example.com',

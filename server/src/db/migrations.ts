@@ -1799,6 +1799,44 @@ function runMigrations(db: Database.Database): void {
       try { db.exec('ALTER TABLE todo_items ADD COLUMN reminded_at DATETIME'); }
       catch (err: any) { if (!err.message?.includes('duplicate column name')) throw err; }
     },
+    // Migration: security audit batch 1 — columns + indexes required
+    // by several fixes bundled into one PR.
+    // - share_tokens.expires_at: public share links now get a 90-day
+    //   TTL by default; existing rows stay NULL (= no expiry) to avoid
+    //   silently breaking already-published links.
+    // - Missing indexes on high-cardinality query paths (see PERF-H1
+    //   in the audit): every listTrips() used to full-scan trips on
+    //   user_id, and notifications/photos/reservations had similar
+    //   gaps.
+    () => {
+      try { db.exec('ALTER TABLE share_tokens ADD COLUMN expires_at TEXT'); }
+      catch (err: any) { if (!err.message?.includes('duplicate column name')) throw err; }
+      db.exec(`
+        CREATE INDEX IF NOT EXISTS idx_trips_user_id ON trips(user_id);
+        CREATE INDEX IF NOT EXISTS idx_trips_created_at ON trips(created_at DESC);
+        CREATE INDEX IF NOT EXISTS idx_photos_day_id ON photos(day_id);
+        CREATE INDEX IF NOT EXISTS idx_photos_place_id ON photos(place_id);
+        CREATE INDEX IF NOT EXISTS idx_reservations_day_id ON reservations(day_id);
+        CREATE INDEX IF NOT EXISTS idx_share_tokens_token ON share_tokens(token);
+      `);
+      try {
+        // day_accommodations may have either start_day_id/end_day_id or a
+        // single day_id depending on how far the schema has evolved;
+        // build whichever index makes sense for the live columns.
+        const cols = db.prepare("PRAGMA table_info('day_accommodations')").all() as Array<{ name: string }>;
+        const names = new Set(cols.map((c) => c.name));
+        if (names.has('start_day_id')) db.exec('CREATE INDEX IF NOT EXISTS idx_day_accommodations_start_day_id ON day_accommodations(start_day_id)');
+        if (names.has('end_day_id')) db.exec('CREATE INDEX IF NOT EXISTS idx_day_accommodations_end_day_id ON day_accommodations(end_day_id)');
+      } catch { /* table may not exist on very old installs */ }
+      try {
+        // notifications schema has varied; probe before indexing.
+        const cols = db.prepare("PRAGMA table_info('notifications')").all() as Array<{ name: string }>;
+        const names = new Set(cols.map((c) => c.name));
+        if (names.has('target') && names.has('scope')) {
+          db.exec('CREATE INDEX IF NOT EXISTS idx_notifications_target_scope ON notifications(target, scope)');
+        }
+      } catch { /* notifications table may not exist on very old installs */ }
+    },
   ];
 
   if (currentVersion < migrations.length) {

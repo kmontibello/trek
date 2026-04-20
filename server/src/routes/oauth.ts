@@ -205,6 +205,25 @@ oauthPublicRouter.post('/oauth/register', dcrLimiter, (req: Request, res: Respon
   if (redirectUris.length === 0) {
     return res.status(400).json({ error: 'invalid_redirect_uri', error_description: 'redirect_uris is required and must be a non-empty array' });
   }
+  // OAuth 2.1 + RFC 8252: confidential web apps need HTTPS; public
+  // clients (MCP, native) are limited to loopback or custom schemes.
+  // This rejects `http://evil.example` DCR payloads that today would
+  // otherwise be accepted since we previously only checked shape.
+  const allowed = redirectUris.every((u) => {
+    try {
+      const url = new URL(u);
+      if (url.protocol === 'https:') return true;
+      if (url.protocol === 'http:' && (url.hostname === 'localhost' || url.hostname === '127.0.0.1' || url.hostname === '[::1]')) return true;
+      // RFC 8252 custom scheme for native/MCP clients (e.g. "myapp://cb")
+      if (!/^https?:$/.test(url.protocol) && url.protocol.endsWith(':') && !url.protocol.includes(' ')) return true;
+      return false;
+    } catch {
+      return false;
+    }
+  });
+  if (!allowed) {
+    return res.status(400).json({ error: 'invalid_redirect_uri', error_description: 'redirect_uris must be HTTPS, loopback HTTP, or a private custom scheme' });
+  }
 
   const rawName = typeof body.client_name === 'string' ? body.client_name.trim().slice(0, 100) : '';
   const clientName = rawName || 'MCP Client';
