@@ -1906,6 +1906,27 @@ function runMigrations(db: Database.Database): void {
         CREATE INDEX IF NOT EXISTS idx_day_accommodations_end_day_id ON day_accommodations(end_day_id);
       `);
     },
+    // Migration: backfill remaining legacy Google photo URLs missed by Migration 107.
+    // Migration 107 matched /places/%/photos/% only; lh3.googleusercontent.com URLs use
+    // /place-photos/ or /places/<opaque-id> paths and were skipped. Rewrite any remaining
+    // google-hosted URL to the stable proxy form using the row's google_place_id.
+    () => {
+      db.exec(`
+        UPDATE places
+        SET image_url   = '/api/maps/place-photo/' || google_place_id || '/bytes',
+            updated_at  = CURRENT_TIMESTAMP
+        WHERE google_place_id IS NOT NULL
+          AND image_url IS NOT NULL
+          AND image_url != ''
+          AND image_url NOT LIKE '/api/maps/place-photo/%'
+          AND (
+                image_url LIKE 'http://%googleusercontent.com/%'
+             OR image_url LIKE 'https://%googleusercontent.com/%'
+             OR image_url LIKE 'http://%places.googleapis.com/%'
+             OR image_url LIKE 'https://%places.googleapis.com/%'
+          )
+      `);
+    },
   ];
 
   if (currentVersion < migrations.length) {

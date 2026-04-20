@@ -96,7 +96,9 @@ export function getInFlight(placeId: string): Promise<{ filePath: string; attrib
 
 export function setInFlight(placeId: string, promise: Promise<{ filePath: string; attribution: string | null } | null>): void {
   inFlight.set(placeId, promise);
-  promise.finally(() => inFlight.delete(placeId));
+  promise
+    .finally(() => inFlight.delete(placeId))
+    .catch(() => { /* awaiter logs; this .catch only prevents unhandledRejection */ });
 }
 
 export function serveFilePath(placeId: string): string | null {

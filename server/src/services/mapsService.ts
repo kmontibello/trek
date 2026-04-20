@@ -648,6 +648,12 @@ export async function getPlacePhoto(
       return null;
     }
 
+    // Reject URL-shaped placeIds — legacy DBs may store raw photo URLs in image_url
+    if (/^https?:\/\//i.test(placeId)) {
+      placePhotoCache.markError(placeId);
+      return null;
+    }
+
     // Google Photos — fetch details to get photo name
     const detailsRes = await googleFetch(`https://places.googleapis.com/v1/places/${placeId}`, `getPlacePhoto/details(${placeId})`, {
       headers: {
@@ -655,13 +661,15 @@ export async function getPlacePhoto(
         'X-Goog-FieldMask': 'photos',
       },
     });
-    const details = await detailsRes.json() as GooglePlaceDetails & { error?: { message?: string } };
-
+    const body = await detailsRes.text();
     if (!detailsRes.ok) {
-      console.error('Google Places photo details error:', details.error?.message || detailsRes.status);
+      console.error('Google Places photo details error:', detailsRes.status, body.slice(0, 200));
       placePhotoCache.markError(placeId);
       return null;
     }
+    let details: GooglePlaceDetails & { error?: { message?: string } };
+    try { details = body ? JSON.parse(body) : { photos: [] }; }
+    catch { placePhotoCache.markError(placeId); return null; }
 
     if (!details.photos?.length) {
       placePhotoCache.markError(placeId);

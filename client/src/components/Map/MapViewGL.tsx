@@ -366,7 +366,11 @@ export function MapViewGL({
       }
       cleanups.push(onThumbReady(cacheKey, thumb => setThumb(cacheKey, thumb)))
       if (!cached && !isLoading(cacheKey)) {
-        const photoId = place.image_url || place.google_place_id || place.osm_id
+        const photoId =
+          (place.image_url?.startsWith('/api/maps/place-photo/') ? place.image_url : null)
+          || place.google_place_id
+          || place.osm_id
+          || place.image_url
         if (photoId || (place.lat && place.lng)) {
           fetchPhoto(cacheKey, photoId || `coords:${place.lat}:${place.lng}`, place.lat, place.lng, place.name)
         }
