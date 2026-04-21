@@ -171,6 +171,8 @@ export interface Reservation {
   place_id?: number | null
   assignment_id?: number | null
   accommodation_id?: number | null
+  accommodation_start_day_id?: number | null
+  accommodation_end_day_id?: number | null
   day_plan_position?: number | null
   metadata?: Record<string, string> | string | null
   needs_review?: number

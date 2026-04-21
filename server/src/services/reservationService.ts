@@ -57,7 +57,8 @@ const saveEndpoints = db.transaction((reservationId: number, endpoints: Endpoint
 export function listReservations(tripId: string | number) {
   const reservations = db.prepare(`
     SELECT r.*, d.day_number, p.name as place_name, r.assignment_id,
-      ap.place_id as accommodation_place_id, acc_p.name as accommodation_name
+      ap.place_id as accommodation_place_id, acc_p.name as accommodation_name,
+      ap.start_day_id as accommodation_start_day_id, ap.end_day_id as accommodation_end_day_id
     FROM reservations r
     LEFT JOIN days d ON r.day_id = d.id
     LEFT JOIN places p ON r.place_id = p.id
@@ -93,7 +94,8 @@ export function listReservations(tripId: string | number) {
 export function getReservationWithJoins(id: string | number) {
   const row = db.prepare(`
     SELECT r.*, d.day_number, p.name as place_name, r.assignment_id,
-      ap.place_id as accommodation_place_id, acc_p.name as accommodation_name
+      ap.place_id as accommodation_place_id, acc_p.name as accommodation_name,
+      ap.start_day_id as accommodation_start_day_id, ap.end_day_id as accommodation_end_day_id
     FROM reservations r
     LEFT JOIN days d ON r.day_id = d.id
     LEFT JOIN places p ON r.place_id = p.id

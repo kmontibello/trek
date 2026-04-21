@@ -112,17 +112,30 @@ function ReservationCard({ r, tripId, onEdit, onDelete, files = [], onNavigateTo
 
   const TRANSPORT_TYPES_SET = new Set(['flight', 'train', 'bus', 'car', 'cruise'])
   const isTransportType = TRANSPORT_TYPES_SET.has(r.type)
-  const startDay = r.day_id ? days.find(d => d.id === r.day_id) : undefined
-  const endDay = r.end_day_id ? days.find(d => d.id === r.end_day_id) : undefined
-  const dayLabel = (day: typeof startDay): string => {
-    if (!day) return ''
-    const base = day.title || t('dayplan.dayN', { n: day.day_number })
-    if (day.date) {
-      const d = new Date(day.date + 'T00:00:00Z')
-      const dateStr = d.toLocaleDateString(locale, { day: 'numeric', month: 'short', timeZone: 'UTC' })
-      return `${base} · ${dateStr}`
-    }
-    return base
+  const isHotel = r.type === 'hotel'
+  const startDay = r.day_id ? days.find(d => d.id === r.day_id)
+    : (isHotel && r.accommodation_start_day_id) ? days.find(d => d.id === r.accommodation_start_day_id)
+    : undefined
+  const endDay = r.end_day_id ? days.find(d => d.id === r.end_day_id)
+    : (isHotel && r.accommodation_end_day_id) ? days.find(d => d.id === r.accommodation_end_day_id)
+    : undefined
+  const DayLabel = ({ day }: { day: typeof startDay }) => {
+    if (!day) return null
+    const name = day.title || t('dayplan.dayN', { n: day.day_number })
+    const badge = day.date
+      ? new Date(day.date + 'T00:00:00Z').toLocaleDateString(locale, { day: 'numeric', month: 'short', timeZone: 'UTC' })
+      : null
+    return (
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+        <span>{name}</span>
+        {badge && (
+          <span style={{
+            fontSize: 10, fontWeight: 600, color: 'var(--text-faint)',
+            background: 'var(--bg-secondary)', padding: '1px 6px', borderRadius: 999,
+          }}>{badge}</span>
+        )}
+      </span>
+    )
   }
 
   return (
@@ -202,12 +215,15 @@ function ReservationCard({ r, tripId, onEdit, onDelete, files = [], onNavigateTo
 
       {/* Body */}
       <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
-        {/* Day label for transport reservations linked to a day */}
-        {isTransportType && startDay && (
+        {/* Day label for transport/hotel reservations linked to days */}
+        {(isTransportType || isHotel) && startDay && (
           <div>
             <div style={fieldLabelStyle}>{t('reservations.date')}</div>
-            <div style={{ ...fieldValueStyle, textAlign: 'center' }}>
-              {dayLabel(startDay)}{endDay && endDay.id !== startDay.id ? ` – ${dayLabel(endDay)}` : ''}
+            <div style={{ ...fieldValueStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, flexWrap: 'wrap' }}>
+              <DayLabel day={startDay} />
+              {endDay && endDay.id !== startDay.id && (
+                <><span style={{ color: 'var(--text-faint)' }}>–</span><DayLabel day={endDay} /></>
+              )}
             </div>
           </div>
         )}
