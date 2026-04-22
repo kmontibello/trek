@@ -138,8 +138,8 @@ A self-hosted, real-time collaborative travel planner — with maps, budgets, pa
 
 #### 🤖 AI / MCP
 
-- **Built-in MCP server** — OAuth 2.1 authenticated. 80+ tools, 27 resources
-- **Granular scopes** — 24 OAuth scopes across 13 permission groups
+- **Built-in MCP server** — OAuth 2.1 authenticated. 150+ tools, 30 resources
+- **Granular scopes** — 27 OAuth scopes across 13 permission groups
 - **Full automation** — AI can create trips, plan days, build packing lists, manage budgets, mark countries visited
 - **Pre-built prompts** — `trip-summary`, `packing-list`, `budget-overview`
 - **Addon-aware** — exposes Atlas, Collab, Vacay when those addons are on
@@ -152,7 +152,7 @@ A self-hosted, real-time collaborative travel planner — with maps, budgets, pa
 #### ⚙️ Admin & customisation
 
 - **Dashboard views** — card grid or compact list · **Dark mode** — full theme with matching status bar
-- **14 languages** — EN, DE, ES, FR, IT, NL, HU, RU, ZH, ZH-TW, PL, CS, AR (RTL), BR, ID
+- **15 languages** — EN, DE, ES, FR, IT, NL, HU, RU, ZH, ZH-TW, PL, CS, AR (RTL), BR, ID
 - **Admin panel** — users, invites, packing templates, categories, addons, API keys, backups, GitHub history
 - **Auto-backups** — scheduled with configurable retention · **Units** — °C/°F, 12h/24h, map tile sources, default coordinates
 
@@ -172,7 +172,7 @@ ENCRYPTION_KEY=$(openssl rand -hex 32) docker run -d -p 3000:3000 \
   -v ./data:/app/data -v ./uploads:/app/uploads mauriceboe/trek
 ```
 
-Open `http://localhost:3000`. The first user to register becomes admin.
+Open `http://localhost:3000`. On first boot TREK seeds an admin account — if you set `ADMIN_EMAIL`/`ADMIN_PASSWORD` those are used, otherwise the credentials are printed to the container log (`docker logs trek`).
 
 <div align="center">
 
@@ -338,7 +338,8 @@ server {
     ssl_certificate     /etc/ssl/fullchain.pem;
     ssl_certificate_key /etc/ssl/privkey.pem;
 
-    client_max_body_size 50m;
+    # 500 MB covers backup-restore uploads (capped at 500 MB server-side).
+    client_max_body_size 500m;
 
     location / {
         proxy_pass http://localhost:3000;
@@ -355,6 +356,7 @@ server {
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
         proxy_set_header Host $host;
+        proxy_read_timeout 86400;
     }
 }
 ```
