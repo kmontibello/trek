@@ -43,6 +43,24 @@ function loadEndpoints(reservationId: number): ReservationEndpoint[] {
   ).all(reservationId) as ReservationEndpoint[];
 }
 
+// Resolve the day row whose date matches the date portion of an ISO-ish
+// timestamp. Used to keep `day_id` / `end_day_id` in sync with
+// `reservation_time` / `reservation_end_time` so non-transport bookings
+// (tours, restaurants, events, ...) end up on the right day in the UI,
+// which now filters by day_id instead of reservation_time.
+function resolveDayIdFromTime(
+  tripId: string | number,
+  time: string | null | undefined,
+): number | null {
+  if (!time) return null;
+  const datePart = time.slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(datePart)) return null;
+  const row = db
+    .prepare('SELECT id FROM days WHERE trip_id = ? AND date = ? LIMIT 1')
+    .get(tripId, datePart) as { id: number } | undefined;
+  return row?.id ?? null;
+}
+
 const saveEndpoints = db.transaction((reservationId: number, endpoints: EndpointInput[]) => {
   db.prepare('DELETE FROM reservation_endpoints WHERE reservation_id = ?').run(reservationId);
   const insert = db.prepare(`
@@ -160,13 +178,26 @@ export function createReservation(tripId: string | number, data: CreateReservati
     }
   }
 
+  // Derive day_id / end_day_id from reservation_time when the client
+  // didn't explicitly set them (non-hotel bookings only — hotels store
+  // their date range on the linked day_accommodation).
+  const resolvedType = type || 'other';
+  let resolvedDayId: number | null = day_id ?? null;
+  if (resolvedDayId == null && resolvedType !== 'hotel' && reservation_time) {
+    resolvedDayId = resolveDayIdFromTime(tripId, reservation_time);
+  }
+  let resolvedEndDayId: number | null = end_day_id ?? null;
+  if (resolvedEndDayId == null && resolvedType !== 'hotel' && reservation_end_time) {
+    resolvedEndDayId = resolveDayIdFromTime(tripId, reservation_end_time);
+  }
+
   const result = db.prepare(`
     INSERT INTO reservations (trip_id, day_id, end_day_id, place_id, assignment_id, title, reservation_time, reservation_end_time, location, confirmation_number, notes, status, type, accommodation_id, metadata, needs_review)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     tripId,
-    day_id || null,
-    end_day_id ?? null,
+    resolvedDayId,
+    resolvedEndDayId,
     place_id || null,
     assignment_id || null,
     title,
@@ -176,7 +207,7 @@ export function createReservation(tripId: string | number, data: CreateReservati
     confirmation_number || null,
     notes || null,
     status || 'pending',
-    type || 'other',
+    resolvedType,
     resolvedAccommodationId,
     metadata ? JSON.stringify(metadata) : null,
     needs_review ? 1 : 0
@@ -290,6 +321,35 @@ export function updateReservation(id: string | number, tripId: string | number, 
     }
   }
 
+  const resolvedType = (type ?? current.type) || 'other';
+  const nextReservationTime = resolvedType === 'hotel'
+    ? null
+    : (reservation_time !== undefined ? (reservation_time || null) : current.reservation_time);
+  const nextReservationEndTime = resolvedType === 'hotel'
+    ? null
+    : (reservation_end_time !== undefined ? (reservation_end_time || null) : current.reservation_end_time);
+
+  // day_id / end_day_id: honour an explicit value from the client,
+  // otherwise derive from the (possibly updated) reservation_time so the
+  // planner renders the booking on the correct day.
+  let nextDayId: number | null;
+  if (day_id !== undefined) {
+    nextDayId = day_id || null;
+  } else if (reservation_time !== undefined && resolvedType !== 'hotel') {
+    nextDayId = resolveDayIdFromTime(tripId, nextReservationTime);
+  } else {
+    nextDayId = current.day_id ?? null;
+  }
+
+  let nextEndDayId: number | null;
+  if (end_day_id !== undefined) {
+    nextEndDayId = end_day_id ?? null;
+  } else if (reservation_end_time !== undefined && resolvedType !== 'hotel') {
+    nextEndDayId = resolveDayIdFromTime(tripId, nextReservationEndTime);
+  } else {
+    nextEndDayId = (current as any).end_day_id ?? null;
+  }
+
   db.prepare(`
     UPDATE reservations SET
       title = COALESCE(?, title),
@@ -310,13 +370,13 @@ export function updateReservation(id: string | number, tripId: string | number, 
     WHERE id = ?
   `).run(
     title || null,
-    (type ?? current.type) === 'hotel' ? null : (reservation_time !== undefined ? (reservation_time || null) : current.reservation_time),
-    (type ?? current.type) === 'hotel' ? null : (reservation_end_time !== undefined ? (reservation_end_time || null) : current.reservation_end_time),
+    nextReservationTime,
+    nextReservationEndTime,
     location !== undefined ? (location || null) : current.location,
     confirmation_number !== undefined ? (confirmation_number || null) : current.confirmation_number,
     notes !== undefined ? (notes || null) : current.notes,
-    day_id !== undefined ? (day_id || null) : current.day_id,
-    end_day_id !== undefined ? (end_day_id ?? null) : (current as any).end_day_id ?? null,
+    nextDayId,
+    nextEndDayId,
     place_id !== undefined ? (place_id || null) : current.place_id,
     assignment_id !== undefined ? (assignment_id || null) : current.assignment_id,
     status || null,
