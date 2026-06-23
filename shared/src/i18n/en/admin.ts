@@ -211,7 +211,7 @@ const admin: TranslationStrings = {
   'admin.packingTemplates.saveError': 'Failed to save',
   'admin.tabs.addons': 'Addons',
   'admin.addons.title': 'Addons',
-  'admin.addons.subtitle': 'Enable or disable features to customize your TREK experience.',
+  'admin.addons.subtitle': 'Enable or disable features to customize your Tanqaways experience.',
   'admin.addons.catalog.packing.name': 'Lists',
   'admin.addons.catalog.packing.description': 'Packing lists and to-do tasks for your trips',
   'admin.addons.catalog.budget.name': 'Budget',
