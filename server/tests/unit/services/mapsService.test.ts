@@ -29,9 +29,26 @@ vi.mock('../../../src/db/database', () => ({
   },
 }));
 
-vi.mock('../../../src/utils/ssrfGuard', () => ({
-  checkSsrf: mockCheckSsrf,
-}));
+vi.mock('../../../src/utils/ssrfGuard', () => {
+  class SsrfBlockedError extends Error {
+    constructor(message: string) {
+      super(message);
+      this.name = 'SsrfBlockedError';
+    }
+  }
+  return {
+    checkSsrf: mockCheckSsrf,
+    SsrfBlockedError,
+    // Mirror the real per-hop helper closely enough for unit tests: run the
+    // (mocked) SSRF check, then fetch through the (stubbed) global fetch. The
+    // fetch stubs in these tests already return the final resolved response.
+    safeFetchFollow: vi.fn(async (url: string, init?: any) => {
+      const ssrf = await mockCheckSsrf(url);
+      if (!ssrf.allowed) throw new SsrfBlockedError(ssrf.error ?? 'Request blocked by SSRF guard');
+      return (globalThis.fetch as any)(url, init);
+    }),
+  };
+});
 
 vi.mock('../../../src/services/apiKeyCrypto', () => ({
   decrypt_api_key: (v: string | null) => v,
@@ -315,6 +332,41 @@ describe('resolveGoogleMapsUrl coordinate extraction (ReDoS guards)', () => {
     expect(result.name).toBe('Eiffel Tower');
   });
 
+  it('MAPS-CID-001: resolves a cid= URL by following the redirect to a coordinate URL', async () => {
+    // cid URLs (what get_place_details returns, and Google "Share" links) carry no
+    // inline coords; the redirect target carries the !3d!4d data param.
+    const fetchMock = vi.fn(async (u: string) => {
+      if (u.includes('nominatim')) {
+        return { ok: true, json: async () => ({ display_name: 'Paris, France', name: 'Eiffel Tower', address: {} }) };
+      }
+      return { url: 'https://www.google.com/maps/place/Eiffel+Tower/data=!3d48.8584!4d2.2945', text: async () => '' };
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    const { resolveGoogleMapsUrl } = await import('../../../src/services/mapsService');
+    const result = await resolveGoogleMapsUrl('https://maps.google.com/?cid=1234567890');
+    expect(result.lat).toBeCloseTo(48.8584, 3);
+    expect(result.lng).toBeCloseTo(2.2945, 3);
+  });
+
+  it('MAPS-CID-002: falls back to parsing coordinates from the page body', async () => {
+    const fetchMock = vi.fn(async (u: string) => {
+      if (u.includes('nominatim')) {
+        return { ok: true, json: async () => ({ display_name: 'NYC, USA', name: null, address: {} }) };
+      }
+      if (u.includes('cid=')) {
+        // Redirect target has no inline coords.
+        return { url: 'https://www.google.com/maps/place/Somewhere', text: async () => '' };
+      }
+      // Body fetch of the resolved URL embeds coords in the map data.
+      return { url: 'https://www.google.com/maps/place/Somewhere', text: async () => 'x!3d40.6892!4d-74.0445y' };
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    const { resolveGoogleMapsUrl } = await import('../../../src/services/mapsService');
+    const result = await resolveGoogleMapsUrl('https://www.google.com/maps?cid=999');
+    expect(result.lat).toBeCloseTo(40.6892, 3);
+    expect(result.lng).toBeCloseTo(-74.0445, 3);
+  });
+
   it('MAPS-024 (ReDoS): /@(-?\\d+\\.?\\d*),(-?\\d+\\.?\\d*)/ on adversarial input < 500ms', () => {
     const adversarial = '/@' + '1'.repeat(10000) + '.';
     const start = Date.now();
@@ -518,6 +570,31 @@ describe('fetchWikimediaPhoto (fetch stubbed)', () => {
     const result = await fetchWikimediaPhoto(48.8, 2.3, 'Some Place');
     expect(result).toBeDefined();
     expect(result!.photoUrl).toBe('https://commons.org/img.jpg');
+    expect(result!.attribution).toBe('Alice');
+  });
+
+  it('MAPS-036b: geosearch prefers the scaled thumburl over the full-res original', async () => {
+    const wikiResponse = { ok: true, json: async () => ({ query: { pages: { '-1': {} } } }) };
+    const commonsResponse = {
+      ok: true,
+      json: async () => ({
+        query: { pages: { '1': {
+          imageinfo: [{
+            url: 'https://commons.org/original-16mb.jpg',
+            thumburl: 'https://commons.org/thumb-400.jpg',
+            mime: 'image/jpeg',
+            extmetadata: { Artist: { value: 'Alice' } },
+          }],
+        } } },
+      }),
+    };
+    vi.stubGlobal('fetch', vi.fn()
+      .mockResolvedValueOnce(wikiResponse)
+      .mockResolvedValueOnce(commonsResponse));
+    const { fetchWikimediaPhoto } = await import('../../../src/services/mapsService');
+    const result = await fetchWikimediaPhoto(48.8, 2.3, 'Some Place');
+    expect(result).toBeDefined();
+    expect(result!.photoUrl).toBe('https://commons.org/thumb-400.jpg');
     expect(result!.attribution).toBe('Alice');
   });
 
@@ -1032,6 +1109,26 @@ describe('getPlaceDetails (fetch stubbed)', () => {
     expect(place.summary).toBeNull();
   });
 
+  it('MAPS-041b2: normalises non-standard TREK language codes for Google (br→pt-BR, gr→el)', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ id: 'ChIJ1', displayName: { text: 'X' }, location: { latitude: 0, longitude: 0 } }),
+    });
+    mockDbGet.mockReturnValue({ maps_api_key: 'gkey' });
+    vi.stubGlobal('fetch', fetchMock);
+    const { getPlaceDetails } = await import('../../../src/services/mapsService');
+
+    await getPlaceDetails(1, 'ChIJ-br', 'br');
+    expect(String(fetchMock.mock.calls[0][0])).toContain('languageCode=pt-BR');
+
+    await getPlaceDetails(1, 'ChIJ-gr', 'gr');
+    expect(String(fetchMock.mock.calls[1][0])).toContain('languageCode=el');
+
+    // A code that is already valid passes through unchanged.
+    await getPlaceDetails(1, 'ChIJ-de', 'de');
+    expect(String(fetchMock.mock.calls[2][0])).toContain('languageCode=de');
+  });
+
   it('MAPS-041c: throws with status when Google API returns non-ok response', async () => {
     mockDbGet.mockReturnValueOnce({ maps_api_key: 'gkey' });
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
@@ -1335,6 +1432,38 @@ describe('getPlacePhoto (fetch stubbed)', () => {
     const uniqueId = `coords:44f-test-${Date.now()}`;
     const result = await getPlacePhoto(1, uniqueId, 48.8, 2.3, 'Coords Place');
     expect(result.photoUrl).toBe(`/api/maps/place-photo/${encodeURIComponent(uniqueId)}/bytes`);
+    expect(mockCachePut).toHaveBeenCalledOnce();
+  });
+
+  it('MAPS-044g: falls back to Wikipedia/OSM for a Google place_id when the Google photo call fails', async () => {
+    // A key is present and the placeId is a Google id, but Google rejects the
+    // photo request (e.g. 403). The lookup must still return an image via the
+    // coordinate-based Wikipedia fallback instead of giving up with a 404 —
+    // matching what right-click (coords:) places already do.
+    mockDbGet.mockReturnValueOnce({ maps_api_key: 'gkey' });
+    vi.stubGlobal('fetch', vi.fn()
+      // 1) Google photo details → 403
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        text: async () => JSON.stringify({ error: { message: 'PERMISSION_DENIED' } }),
+      })
+      // 2) Wikipedia pageimages → thumbnail
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ query: { pages: { '1': { thumbnail: { source: 'https://wiki.org/guinness.jpg' } } } } }),
+      })
+      // 3) image bytes
+      .mockResolvedValueOnce({
+        ok: true,
+        arrayBuffer: async () => new ArrayBuffer(200),
+      })
+    );
+    const { getPlacePhoto } = await import('../../../src/services/mapsService');
+    const placeId = `ChIJFallback-${Date.now()}`;
+    const result = await getPlacePhoto(1, placeId, 53.34, -6.28, 'Guinness Storehouse');
+    expect(result.photoUrl).toBe(`/api/maps/place-photo/${encodeURIComponent(placeId)}/bytes`);
+    expect(result.attribution).toBe('Wikipedia');
     expect(mockCachePut).toHaveBeenCalledOnce();
   });
 });

@@ -10,7 +10,7 @@ import { searchPlaces } from '../../services/mapsService';
 import {
   safeBroadcast, TOOL_ANNOTATIONS_READONLY, TOOL_ANNOTATIONS_WRITE,
   TOOL_ANNOTATIONS_DELETE, TOOL_ANNOTATIONS_NON_IDEMPOTENT,
-  demoDenied, noAccess, ok,
+  demoDenied, noAccess, ok, hasTripPermission, permissionDenied,
 } from './_shared';
 import { canRead, canWrite } from '../scopes';
 
@@ -23,7 +23,7 @@ export function registerPlaceTools(server: McpServer, userId: number, scopes: st
   if (W) server.registerTool(
     'create_place',
     {
-      description: 'Add a new place/POI to a trip. Set google_place_id or osm_id (from search_place) so the app can show opening hours and ratings.',
+      description: 'Add a new place/POI to a trip. Set google_place_id or osm_id (from search_place) so the app can show opening hours and ratings. Set price + currency to record the cost so it shows on the item.',
       inputSchema: {
         tripId: z.number().int().positive(),
         name: z.string().min(1).max(200),
@@ -37,13 +37,16 @@ export function registerPlaceTools(server: McpServer, userId: number, scopes: st
         notes: z.string().max(2000).optional(),
         website: z.string().max(500).optional(),
         phone: z.string().max(50).optional(),
+        price: z.number().nonnegative().optional().describe('Cost of this place/activity (e.g. ticket price, entry fee)'),
+        currency: z.string().length(3).optional().describe('ISO 4217 currency code (e.g. "EUR", "USD")'),
       },
       annotations: TOOL_ANNOTATIONS_NON_IDEMPOTENT,
     },
-    async ({ tripId, name, description, lat, lng, address, category_id, google_place_id, osm_id, notes, website, phone }) => {
+    async ({ tripId, name, description, lat, lng, address, category_id, google_place_id, osm_id, notes, website, phone, price, currency }) => {
       if (isDemoUser(userId)) return demoDenied();
       if (!canAccessTrip(tripId, userId)) return noAccess();
-      const place = createPlace(String(tripId), { name, description, lat, lng, address, category_id, google_place_id, osm_id, notes, website, phone });
+      if (!hasTripPermission('place_edit', tripId, userId)) return permissionDenied();
+      const place = createPlace(String(tripId), { name, description, lat, lng, address, category_id, google_place_id, osm_id, notes, website, phone, price, currency });
       safeBroadcast(tripId, 'place:created', { place });
       return ok({ place });
     }
@@ -52,7 +55,7 @@ export function registerPlaceTools(server: McpServer, userId: number, scopes: st
   if (W) server.registerTool(
     'create_and_assign_place',
     {
-      description: 'Create a new place and immediately assign it to a day in one atomic operation. Use place details from search_place results. Only use when the place does not yet exist — if it already exists, use assign_place_to_day directly.',
+      description: 'Create a new place and immediately assign it to a day in one atomic operation. Use place details from search_place results. Only use when the place does not yet exist — if it already exists, use assign_place_to_day directly. Set price + currency to record the cost so it shows on the item.',
       inputSchema: {
         tripId: z.number().int().positive(),
         dayId: z.number().int().positive().describe('Day to assign the place to'),
@@ -68,16 +71,19 @@ export function registerPlaceTools(server: McpServer, userId: number, scopes: st
         website: z.string().max(500).optional(),
         phone: z.string().max(50).optional(),
         assignment_notes: z.string().max(500).optional().describe('Notes for this day assignment'),
+        price: z.number().nonnegative().optional().describe('Cost of this place/activity (e.g. ticket price, entry fee)'),
+        currency: z.string().length(3).optional().describe('ISO 4217 currency code (e.g. "EUR", "USD")'),
       },
       annotations: TOOL_ANNOTATIONS_NON_IDEMPOTENT,
     },
-    async ({ tripId, dayId, name, description, lat, lng, address, category_id, google_place_id, osm_id, place_notes, website, phone, assignment_notes }) => {
+    async ({ tripId, dayId, name, description, lat, lng, address, category_id, google_place_id, osm_id, place_notes, website, phone, assignment_notes, price, currency }) => {
       if (isDemoUser(userId)) return demoDenied();
       if (!canAccessTrip(tripId, userId)) return noAccess();
+      if (!hasTripPermission('place_edit', tripId, userId)) return permissionDenied();
       if (!dayExists(dayId, tripId)) return { content: [{ type: 'text' as const, text: 'Day not found.' }], isError: true };
       try {
         const run = db.transaction(() => {
-          const place = createPlace(String(tripId), { name, description, lat, lng, address, category_id, google_place_id, osm_id, notes: place_notes, website, phone });
+          const place = createPlace(String(tripId), { name, description, lat, lng, address, category_id, google_place_id, osm_id, notes: place_notes, website, phone, price, currency });
           const assignment = createAssignment(dayId, place.id, assignment_notes ?? null);
           return { place, assignment };
         });
@@ -121,6 +127,7 @@ export function registerPlaceTools(server: McpServer, userId: number, scopes: st
     async ({ tripId, placeId, name, description, lat, lng, address, category_id, price, currency, place_time, end_time, duration_minutes, notes, website, phone, transport_mode, osm_id, google_place_id }) => {
       if (isDemoUser(userId)) return demoDenied();
       if (!canAccessTrip(tripId, userId)) return noAccess();
+      if (!hasTripPermission('place_edit', tripId, userId)) return permissionDenied();
       const place = updatePlace(String(tripId), String(placeId), { name, description, lat, lng, address, category_id, price, currency, place_time, end_time, duration_minutes, notes, website, phone, transport_mode, osm_id, google_place_id });
       if (!place) return { content: [{ type: 'text' as const, text: 'Place not found.' }], isError: true };
       safeBroadcast(tripId, 'place:updated', { place });
@@ -141,6 +148,7 @@ export function registerPlaceTools(server: McpServer, userId: number, scopes: st
     async ({ tripId, placeId }) => {
       if (isDemoUser(userId)) return demoDenied();
       if (!canAccessTrip(tripId, userId)) return noAccess();
+      if (!hasTripPermission('place_edit', tripId, userId)) return permissionDenied();
       const deleted = deletePlace(String(tripId), String(placeId));
       if (!deleted) return { content: [{ type: 'text' as const, text: 'Place not found.' }], isError: true };
       safeBroadcast(tripId, 'place:deleted', { placeId });
@@ -218,6 +226,7 @@ export function registerPlaceTools(server: McpServer, userId: number, scopes: st
     async ({ tripId, url, source }) => {
       if (isDemoUser(userId)) return demoDenied();
       if (!canAccessTrip(tripId, userId)) return noAccess();
+      if (!hasTripPermission('place_edit', tripId, userId)) return permissionDenied();
 
       const result = source === 'google-list'
         ? await importGoogleList(String(tripId), url)
@@ -247,6 +256,7 @@ export function registerPlaceTools(server: McpServer, userId: number, scopes: st
     async ({ tripId, placeIds }) => {
       if (isDemoUser(userId)) return demoDenied();
       if (!canAccessTrip(tripId, userId)) return noAccess();
+      if (!hasTripPermission('place_edit', tripId, userId)) return permissionDenied();
 
       const deleted = deletePlacesMany(String(tripId), placeIds);
       for (const id of deleted) {
