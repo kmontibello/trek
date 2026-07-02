@@ -3,7 +3,7 @@ import type { TranslationStrings } from '../types';
 const system_notice: TranslationStrings = {
   'system_notice.v3_photos.title': 'Photos have moved in 3.0',
   'system_notice.v3_photos.body':
-    '**Photos** in the Trip Planner have been removed. Your photos are safe — TREK never modified your Immich or Synology library.\n\nPhotos now live in the **Journey** addon. Journey is optional — if it is not yet available, ask your admin to enable it under Admin → Addons.',
+    '**Photos** in the Trip Planner have been removed. Your photos are safe — Tanqaways never modified your Immich or Synology library.\n\nPhotos now live in the **Journey** addon. Journey is optional — if it is not yet available, ask your admin to enable it under Admin → Addons.',
   'system_notice.v3_journey.title': 'Meet Journey — travel journal',
   'system_notice.v3_journey.body':
     'Document your trips as rich travel stories with timelines, photo galleries, and interactive maps.',
@@ -35,7 +35,7 @@ const system_notice: TranslationStrings = {
   'system_notice.welcome_v1.body':
     'Your all-in-one travel planner. Build itineraries, share trips with friends, and stay organized — online or offline.',
   'system_notice.welcome_v1.cta_label': 'Plan a trip',
-  'system_notice.welcome_v1.hero_alt': 'A scenic travel destination with TREK planning UI overlay',
+  'system_notice.welcome_v1.hero_alt': 'A scenic travel destination with Tanqaways planning UI overlay',
   'system_notice.welcome_v1.highlight_plan': 'Day-by-day itineraries for any trip',
   'system_notice.welcome_v1.highlight_share': 'Collaborate with travel partners',
   'system_notice.welcome_v1.highlight_offline': 'Works offline on mobile',

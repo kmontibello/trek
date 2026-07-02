@@ -212,7 +212,7 @@ const admin: TranslationStrings = {
   'admin.packingTemplates.saveError': 'Failed to save',
   'admin.tabs.addons': 'Addons',
   'admin.addons.title': 'Addons',
-  'admin.addons.subtitle': 'Enable or disable features to customize your TREK experience.',
+  'admin.addons.subtitle': 'Enable or disable features to customize your Tanqaways experience.',
   'admin.addons.catalog.packing.name': 'Lists',
   'admin.addons.catalog.packing.description': 'Packing lists and to-do tasks for your trips',
   'admin.addons.catalog.budget.name': 'Budget',
@@ -245,7 +245,7 @@ const admin: TranslationStrings = {
   'admin.weather.title': 'Weather Data',
   'admin.weather.badge': 'Since March 24, 2026',
   'admin.weather.description':
-    'TREK uses Open-Meteo as its weather data source. Open-Meteo is a free, open-source weather service — no API key required.',
+    'Tanqaways uses Open-Meteo as its weather data source. Open-Meteo is a free, open-source weather service — no API key required.',
   'admin.weather.forecast': '16-day forecast',
   'admin.weather.forecastDesc': 'Previously 5 days (OpenWeatherMap)',
   'admin.weather.climate': 'Historical climate data',
