@@ -184,6 +184,7 @@ const admin: TranslationStrings = {
     'The default map for everyone on this instance. Each user can still override it in their own settings.',
   'admin.defaultSettings.providerLeaflet': 'Standard (free)',
   'admin.defaultSettings.providerMapbox': 'Mapbox (3D)',
+  'admin.defaultSettings.providerMapLibre': 'MapLibre (OpenFreeMap)',
   'admin.defaultSettings.mapboxToken': 'Shared Mapbox token',
   'admin.defaultSettings.mapboxTokenHint':
     'Used for every user who has not entered their own token — so the whole instance gets Mapbox without sharing the key individually. Stored encrypted.',
@@ -244,7 +245,7 @@ const admin: TranslationStrings = {
   'admin.weather.title': 'Weather Data',
   'admin.weather.badge': 'Since March 24, 2026',
   'admin.weather.description':
-    'TREK uses Open-Meteo as its weather data source. Open-Meteo is a free, open-source weather service — no API key required.',
+    'Tanqaways uses Open-Meteo as its weather data source. Open-Meteo is a free, open-source weather service — no API key required.',
   'admin.weather.forecast': '16-day forecast',
   'admin.weather.forecastDesc': 'Previously 5 days (OpenWeatherMap)',
   'admin.weather.climate': 'Historical climate data',
