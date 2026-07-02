@@ -31,7 +31,7 @@ const system_notice: TranslationStrings = {
   'system_notice.v3014_whitespace_collision.title': 'Action required: user account conflict',
   'system_notice.v3014_whitespace_collision.body':
     'The 3.0.14 upgrade detected one or more username or email collisions caused by leading/trailing whitespace in stored accounts. Affected accounts were renamed automatically. Check the server logs for lines starting with **[migration] WHITESPACE COLLISION** to identify which accounts need review.',
-  'system_notice.welcome_v1.title': 'Welcome to TREK',
+  'system_notice.welcome_v1.title': 'Welcome to Tanqaways',
   'system_notice.welcome_v1.body':
     'Your all-in-one travel planner. Build itineraries, share trips with friends, and stay organized — online or offline.',
   'system_notice.welcome_v1.cta_label': 'Plan a trip',
