@@ -5,8 +5,7 @@ const packing: TranslationStrings = {
   'packing.empty': 'Packlistan är tom',
   'packing.import': 'Importera',
   'packing.importTitle': 'Importera packlista',
-  'packing.importHint':
-    'Ett föremål per rad. Format: Kategori, Namn, Vikt i g (valfritt), Påse (valfritt)',
+  'packing.importHint': 'Ett föremål per rad. Format: Kategori, Namn, Vikt i g (valfritt), Påse (valfritt)',
   'packing.importPlaceholder':
     'Hygiene, tandborste\nKläder, T-shirts, 200\nDokument, pass, handbagage\nElektronik, laddare, 50, resväska',
   'packing.importCsv': 'Ladda CSV/TXT',
@@ -180,5 +179,22 @@ const packing: TranslationStrings = {
       category: 'Hälsa',
     },
   ],
+  'packing.makePrivate': 'Gör privat',
+  'packing.makePublic': 'Dela',
+  'packing.privateHint': 'Privat — endast synligt för dig',
+  'packing.viewCommon': 'Delat',
+  'packing.viewPersonal': 'Min lista',
+  'packing.share': 'Delning',
+  'packing.tierCommonHint': 'I grupp-poolen, synligt för alla',
+  'packing.tierPersonal': 'Personlig',
+  'packing.tierPersonalHint': 'Privat — bara du ser det',
+  'packing.tierShared': 'Dela med…',
+  'packing.noOneToShare': 'Ingen annan på den här resan ännu',
+  'packing.takenCareOf': 'av {name}',
+  'packing.sharedWithCount': 'delat med {count}',
+  'packing.broughtBy': 'tas med av {name}',
+  'packing.alsoBring': 'Jag kan ta med det också',
+  'packing.alsoBringingStop': 'Jag tar inte med det',
+  'packing.cloneToMine': 'Kopiera till min lista',
 };
 export default packing;
