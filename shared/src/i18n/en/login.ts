@@ -2,7 +2,7 @@ import type { TranslationStrings } from '../types';
 
 const login: TranslationStrings = {
   'login.error': 'Login failed. Please check your credentials.',
-  'login.tagline': 'Not just getaways.\nTanqaways',
+  'login.tagline': 'Not just getaways.\nTanqaways.',
   'login.description': 'Plan trips collaboratively with interactive maps, budgets, and real-time sync.',
   'login.features.maps': 'Interactive Maps',
   'login.features.mapsDesc': 'Google Places, routes & clustering',
@@ -26,7 +26,7 @@ const login: TranslationStrings = {
   'login.signingIn': 'Signing in…',
   'login.signIn': 'Sign In',
   'login.createAdmin': 'Create Admin Account',
-  'login.createAdminHint': 'Set up the first admin account for TREK.',
+  'login.createAdminHint': 'Set up the first admin account for Tanqaways.',
   'login.setNewPassword': 'Set New Password',
   'login.setNewPasswordHint': 'You must change your password before continuing.',
   'login.createAccount': 'Create Account',

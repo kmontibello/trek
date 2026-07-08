@@ -75,7 +75,7 @@ const oauth: TranslationStrings = {
   'oauth.authorize.loginDescription': '{client} wants access to your Tanqaways account. Please sign in first.',
   'oauth.authorize.loginButton': 'Sign in to Tanqaways',
   'oauth.authorize.requestLabel': 'Authorization Request',
-  'oauth.authorize.requestDescription': 'This application is requesting access to your TREK account.',
+  'oauth.authorize.requestDescription': 'This application is requesting access to your Tanqaways account.',
   'oauth.authorize.trustNote': 'Only grant access to applications you trust. Your data stays on your server.',
   'oauth.authorize.selectScope': 'Select at least one scope',
   'oauth.authorize.approveOneScope': 'Approve ({count} scope)',
