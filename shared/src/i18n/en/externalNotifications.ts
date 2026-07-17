@@ -2,10 +2,10 @@ import type { NotificationLocale } from '../externalNotifications/types';
 
 const en: NotificationLocale = {
   email: {
-    footer: 'You received this because you have notifications enabled in TREK.',
+    footer: 'You received this because you have notifications enabled in Tanqaways.',
     manage: 'Manage preferences in Settings',
     madeWith: 'Made with',
-    openTrek: 'Open TREK',
+    openTrek: 'Open Tanqaways',
   },
   events: {
     trip_invite: (p) => ({
@@ -26,11 +26,11 @@ const en: NotificationLocale = {
     }),
     vacay_invite: (p) => ({
       title: 'Vacay Fusion Invite',
-      body: `${p.actor} invited you to fuse vacation plans. Open TREK to accept or decline.`,
+      body: `${p.actor} invited you to fuse vacation plans. Open Tanqaways to accept or decline.`,
     }),
     collection_invite: (p) => ({
       title: 'Collection invite',
-      body: `${p.actor} invited you to share a collection. Open TREK to accept or decline.`,
+      body: `${p.actor} invited you to share a collection. Open Tanqaways to accept or decline.`,
     }),
     photos_shared: (p) => ({
       title: `${p.count} photos shared`,
@@ -57,7 +57,7 @@ const en: NotificationLocale = {
   passwordReset: {
     subject: 'Reset your password',
     greeting: 'Hi',
-    body: 'We received a request to reset the password for your TREK account. Click the button below to set a new password.',
+    body: 'We received a request to reset the password for your Tanqaways account. Click the button below to set a new password.',
     ctaIntro: 'Reset password',
     expiry: 'This link expires in 60 minutes.',
     ignore: "If you didn't request this, you can safely ignore this email — your password won't change.",
