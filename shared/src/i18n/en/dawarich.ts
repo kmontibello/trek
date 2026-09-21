@@ -4,7 +4,7 @@ const dawarich: TranslationStrings = {
   // ── Connection ─────────────────────────────────────────────────────────────
   'dawarich.title': 'Dawarich',
   'dawarich.intro':
-    'Connect your own Dawarich instance to see where you actually went. TREK reads it and suggests journal entries, places and countries — nothing is added until you confirm it, and nothing is written back to Dawarich.',
+    'Connect your own Dawarich instance to see where you actually went. Tanqaways reads it and suggests journal entries, places and countries — nothing is added until you confirm it, and nothing is written back to Dawarich.',
   'dawarich.url': 'Instance address',
   'dawarich.apiKey': 'API key',
   'dawarich.apiKeyPlaceholder': 'Paste your Dawarich API key',
@@ -12,7 +12,7 @@ const dawarich: TranslationStrings = {
   'dawarich.allowInsecureTls': 'Allow self-signed certificate',
   'dawarich.allowInsecureTlsHint': 'Only needed if your instance uses a certificate your server does not trust.',
   'dawarich.syncEnabled': 'Check for new stays automatically',
-  'dawarich.syncEnabledHint': 'Off means TREK only reads Dawarich when you ask it to.',
+  'dawarich.syncEnabledHint': 'Off means Tanqaways only reads Dawarich when you ask it to.',
   'dawarich.test.button': 'Test connection',
   'dawarich.test.success': 'Connected. {count} stays found in the last 30 days.',
   'dawarich.test.failed': 'Could not reach Dawarich.',
@@ -45,18 +45,18 @@ const dawarich: TranslationStrings = {
   'dawarich.capability.missing': 'This Dawarich version does not offer: {features}.',
 
   // ── Failure reasons, as sentences the reader can act on ────────────────────
-  'dawarich.error.unreachable': 'TREK could not reach that address.',
+  'dawarich.error.unreachable': 'Tanqaways could not reach that address.',
   'dawarich.error.unauthorized': 'Dawarich rejected the API key.',
   'dawarich.error.forbidden': 'That API key is not allowed to read this.',
   'dawarich.error.not_found': 'This Dawarich version does not have that endpoint.',
-  'dawarich.error.rate_limited': 'Dawarich asked TREK to slow down. Try again shortly.',
+  'dawarich.error.rate_limited': 'Dawarich asked Tanqaways to slow down. Try again shortly.',
   'dawarich.error.server_error': 'Dawarich answered with an error.',
   'dawarich.error.invalid_response': 'That address answered with something that is not Dawarich.',
-  'dawarich.error.too_large': 'Dawarich sent more data than TREK will read at once.',
+  'dawarich.error.too_large': 'Dawarich sent more data than Tanqaways will read at once.',
   'dawarich.error.not_connected': 'No Dawarich instance is connected yet.',
   'dawarich.error.addon_disabled': 'The Dawarich addon is switched off for this instance.',
-  'dawarich.error.offline': 'This needs a connection — TREK is offline right now.',
-  'dawarich.error.invalid_url': 'TREK cannot use that address.',
+  'dawarich.error.offline': 'This needs a connection — Tanqaways is offline right now.',
+  'dawarich.error.invalid_url': 'Tanqaways cannot use that address.',
   'dawarich.warning.private_ip': 'That address resolves to a private IP ({ip}). Make sure that is what you meant — the server may need ALLOW_INTERNAL_NETWORK=true to reach it.',
   'dawarich.error.unknown': 'Something went wrong talking to Dawarich.',
 

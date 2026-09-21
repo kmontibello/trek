@@ -13,17 +13,17 @@ const docsync: TranslationStrings = {
   'docsync.newFolderPlaceholder': 'New folder name',
   'docsync.syncNow': 'Sync now',
   'docsync.unlink': 'Disconnect',
-  'docsync.confirmUnlink': 'Documents stay in TREK and at the store. Only the pairing between them goes.',
+  'docsync.confirmUnlink': 'Documents stay in Tanqaways and at the store. Only the pairing between them goes.',
   'docsync.syncEnabled': 'Sync automatically',
   'docsync.deletePolicy': 'When a document is deleted',
   'docsync.deleteUnlink': 'Keep both copies',
   'docsync.deleteTrash': 'Move to recycle bin',
   'docsync.conflictPolicy': 'When both sides changed',
   'docsync.onConflict.manual': 'Ask me',
-  'docsync.onConflict.trek_wins': 'Keep the TREK copy',
+  'docsync.onConflict.trek_wins': 'Keep the Tanqaways copy',
   'docsync.onConflict.provider_wins': "Keep the store's copy",
   'docsync.webhookHint':
-    'Paste this URL into your provider so changes arrive immediately. Without it, TREK checks on a timer.',
+    'Paste this URL into your provider so changes arrive immediately. Without it, Tanqaways checks on a timer.',
 
   // Connection form fields. The keys mirror the `label` column in
   // document_provider_fields, which stores a key suffix rather than text.
@@ -46,7 +46,7 @@ const docsync: TranslationStrings = {
   'docsync.hintNextcloudLogin': 'Your Nextcloud login name, not your email address.',
   'docsync.hintNextcloudAppPassword': 'Settings, Security, Create new app password. Never your account password.',
   'docsync.hintOpenCloudToken': 'Created under app tokens in OpenCloud.',
-  'docsync.hintBasePath': 'Where TREK looks for trip folders. Defaults to /TREK.',
+  'docsync.hintBasePath': 'Where Tanqaways looks for trip folders. Defaults to /TREK.',
   'docsync.hintSynologyUrl': 'Include the port, for example https://nas.example.com:5001',
   'docsync.hintSynologyUser': 'Best a dedicated DSM account with access to just this shared folder.',
   'docsync.hintSynologyOtp': 'Only needed once, if the account uses two-factor authentication.',
@@ -66,13 +66,13 @@ const docsync: TranslationStrings = {
   'docsync.state.too_large': 'Too large',
   'docsync.state.error': 'Error',
   'docsync.state.remote_missing': 'Missing at the provider',
-  'docsync.state.local_deleted': 'Deleted in TREK',
+  'docsync.state.local_deleted': 'Deleted in Tanqaways',
   'docsync.state.scope_drift': 'Moved out of the folder',
 
   'docsync.conflict.resolve': "Resolve {count}",
 
   'docsync.conflict.title': 'Both copies changed',
-  'docsync.conflict.keepTrek': 'Keep the TREK version',
+  'docsync.conflict.keepTrek': 'Keep the Tanqaways version',
   'docsync.conflict.keepProvider': 'Keep the provider version',
   'docsync.conflict.keepBoth': 'Keep both',
 
@@ -85,7 +85,7 @@ const docsync: TranslationStrings = {
   'docsync.error.forbidden': 'This account is not allowed to do that.',
   'docsync.error.not_found': 'Not found on the provider.',
   'docsync.error.scope_missing': 'The connected folder no longer exists.',
-  'docsync.error.rate_limited': 'The provider is rate limiting us. TREK will try again later.',
+  'docsync.error.rate_limited': 'The provider is rate limiting us. Tanqaways will try again later.',
   'docsync.error.too_large': 'The file is larger than the provider accepts.',
   'docsync.error.unsupported_type': 'The provider does not accept this file type.',
   'docsync.error.quota_exceeded': 'The provider is out of space.',
@@ -150,10 +150,10 @@ const docsync: TranslationStrings = {
   'docsync.connect.about.paperless':
     'TREK files this trip under its own tag and never touches the rest of your archive.',
   'docsync.connect.about.papra':
-    'Pick the organisation this trip belongs to. TREK files it under its own tag inside it.',
+    'Pick the organisation this trip belongs to. Tanqaways files it under its own tag inside it.',
   'docsync.connect.about.nextcloud':
     'Use an app password, not your account password: it survives two-factor and you can revoke it on its own.',
-  'docsync.connect.about.opencloud': 'TREK gets its own space for this trip, separate from everything else.',
+  'docsync.connect.about.opencloud': 'Tanqaways gets its own space for this trip, separate from everything else.',
   'docsync.connect.about.synologydrive': 'Best a DSM account that only reaches the shared folder this trip should use.',
 
   // ── Picking the container ──────────────────────────────────────────────────

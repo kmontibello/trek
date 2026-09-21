@@ -2,14 +2,14 @@ import type { TranslationStrings } from '../types';
 
 const login: TranslationStrings = {
   'login.error': 'Login failed. Please check your credentials.',
-  'login.tagline': 'Your Trips.\nYour Plan.',
+  'login.tagline': 'Not just getaways.\nTanqaways.',
   'login.description': 'Plan trips collaboratively with interactive maps, budgets, and real-time sync.',
   'login.title': 'Sign In',
   'login.subtitle': 'Welcome back',
   'login.signingIn': 'Signing in…',
   'login.signIn': 'Sign In',
   'login.createAdmin': 'Create Admin Account',
-  'login.createAdminHint': 'Set up the first admin account for TREK.',
+  'login.createAdminHint': 'Set up the first admin account for Tanqaways.',
   'login.setNewPassword': 'Set New Password',
   'login.setNewPasswordHint': 'You must change your password before continuing.',
   'login.createAccount': 'Create Account',
@@ -70,7 +70,7 @@ const login: TranslationStrings = {
   'login.passkey.failed': 'Passkey sign-in failed. Please try again.',
   'login.insecureCookie.title': "Login won't stick over HTTP",
   'login.insecureCookie.body':
-    'You’re connecting over plain HTTP, so your browser drops TREK’s secure session cookie — the next request fails with "Access token required". Fix: use HTTPS, or for a home-lab set COOKIE_SECURE=false.',
+    'You’re connecting over plain HTTP, so your browser drops Tanqaways secure session cookie — the next request fails with "Access token required". Fix: use HTTPS, or for a home-lab set COOKIE_SECURE=false.',
   'login.insecureCookie.link': 'Open the Troubleshooting guide',
 };
 export default login;
